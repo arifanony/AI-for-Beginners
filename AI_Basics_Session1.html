@@ -1,0 +1,1094 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>AI Engineering Basics: Session 1: What is AI? and Understanding data</title>
+<style>
+:root{--ink:#1f2937;--muted:#6b7280;--line:#e5e7eb;--soft:#f8fafc;--reg:#2563eb;--cls:#db2777;}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:"Segoe UI",Roboto,Arial,sans-serif;color:var(--ink);line-height:1.6;background:#f1f5f9;font-size:15.5px}
+nav{position:sticky;top:0;z-index:50;background:#111827;display:flex;gap:2px;flex-wrap:wrap;padding:8px 12px;align-items:center}
+nav .brand{color:#fcd34d;font-weight:700;margin-right:8px}
+nav a{color:#e5e7eb;text-decoration:none;padding:4px 9px;border-radius:999px;font-size:13px}
+nav a:hover,nav a.active{background:#374151;color:#fff}
+.wrap{max-width:1080px;margin:0 auto;padding:24px 20px 80px}
+section{background:#fff;border-radius:16px;padding:26px 30px;margin:22px 0;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+h1{margin:0;font-size:30px}
+h2{margin:0 0 6px;font-size:25px}
+h3{margin:24px 0 8px;font-size:18px}
+h4{margin:14px 0 4px;font-size:15.5px}
+.lead{color:var(--muted);margin:0 0 14px}
+.hero{background:linear-gradient(135deg,#eef2ff,#ecfeff 60%,#fdf4ff)}
+.pill{display:inline-block;font-size:12px;font-weight:600;padding:3px 10px;border-radius:999px;background:#fff;border:1px solid var(--line);margin:10px 6px 0 0}
+.hint{font-size:13px;color:var(--muted);background:var(--soft);border:1px dashed #cbd5e1;border-radius:8px;padding:6px 10px;display:inline-block;margin:4px 0 10px}
+.btn{border:1px solid #cbd5e1;background:#fff;border-radius:8px;padding:7px 14px;cursor:pointer;font-size:14px;font-family:inherit;transition:.15s}
+.btn:hover{background:#f1f5f9}
+.btn.primary{background:#111827;color:#fff;border-color:#111827}
+.btn.on{background:#111827;color:#fff;border-color:#111827}
+.row{display:flex;gap:22px;flex-wrap:wrap}
+.col{flex:1 1 340px;min-width:280px}
+.box{border-radius:10px;padding:12px 16px;margin:12px 0;border-left:5px solid}
+.analogy{background:#fefce8;border-color:#eab308}
+.example{background:#eff6ff;border-color:#3b82f6}
+.key{background:#ecfdf5;border-color:#10b981}
+.warn{background:#fef2f2;border-color:#ef4444}
+.myth{background:#fff7ed;border-color:#f97316}
+.lbl{display:block;font-weight:700;font-size:12px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:2px}
+table{width:100%;border-collapse:collapse;font-size:14px;margin:8px 0}
+th,td{border:1px solid var(--line);padding:7px 10px;text-align:left;vertical-align:top}
+th{background:#f1f5f9}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+tr.hl td{background:#ecfdf5}
+.takeaway{background:#111827;color:#fff;border-radius:10px;padding:14px 18px;margin-top:18px;font-size:16px}
+.takeaway b{color:#fcd34d}
+.c-reg{color:var(--reg);font-weight:700}.c-cls{color:var(--cls);font-weight:700}
+code{font-family:Consolas,"Courier New",monospace;background:#f1f5f9;padding:1px 6px;border-radius:4px;font-size:14px}
+.stepper{display:flex;gap:8px;align-items:center;margin:8px 0;flex-wrap:wrap}
+svg.chart{width:100%;height:auto;background:#fff;border:1px solid var(--line);border-radius:10px}
+input[type=range]{width:100%}
+input[type=number]{font-family:inherit;font-size:14px;padding:6px 8px;border-radius:8px;border:1px solid #cbd5e1;width:90px}
+select{font-family:inherit;font-size:14px;padding:6px 10px;border-radius:8px;border:1px solid #cbd5e1}
+label.sl{display:block;font-size:14px;margin-top:6px}
+.readout{background:var(--soft);border:1px solid var(--line);border-radius:10px;padding:10px 14px;font-size:14.5px}
+.status{border-radius:10px;padding:10px 14px;margin:8px 0;font-weight:600;border:1px solid}
+.st-ok{background:#ecfdf5;border-color:#10b981}.st-mid{background:#fffbeb;border-color:#f59e0b}.st-bad{background:#fef2f2;border-color:#ef4444}
+.flow{display:flex;flex-wrap:wrap;gap:6px;align-items:stretch;margin:10px 0}
+.flow .st{flex:1 1 140px;background:var(--soft);border:2px solid var(--line);border-radius:10px;padding:10px 12px;font-size:14px}
+.flow .st .sn{display:block;font-weight:700;font-size:13px;color:#4f46e5}
+.gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+.gallery figure{margin:0;border:1px solid var(--line);border-radius:10px;padding:6px;background:#fff}
+.gallery figcaption{font-size:13px;padding:4px 6px 2px}
+.gallery svg{width:100%;height:auto}
+.dart{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px}
+.dart figure{margin:0;border:2px solid var(--line);border-radius:10px;padding:8px;text-align:center;background:#fff}
+.dart figcaption{font-size:13px}
+.dart svg{width:160px;height:160px}
+/* Venn */
+#venn{width:100%;height:auto;max-height:520px}
+#venn .layer{cursor:pointer;transition:opacity .25s,stroke-width .2s}
+#venn .layer:hover{stroke-width:5}
+#venn.focus .layer{opacity:.25}
+#venn.focus .layer.sel,#venn.focus .layer.parent{opacity:1}
+#venn .layer.sel{stroke-width:6}
+#venn text{pointer-events:none;user-select:none}
+#dsGroup{transition:opacity .35s}
+#dsGroup.hide{opacity:0}
+#dsLabel{cursor:pointer;pointer-events:all!important}
+.info{border-radius:14px;padding:16px 18px;border:2px solid var(--line);min-height:380px}
+.info h3{margin:0 0 2px;font-size:21px}
+.info .tag{font-size:13px;color:var(--muted);margin-bottom:8px}
+.chips span{display:inline-block;font-size:12.5px;border-radius:999px;padding:3px 10px;margin:3px 4px 0 0;background:#f1f5f9;border:1px solid var(--line)}
+.chips.no span{background:#fef2f2;border-color:#fecaca}
+.legend{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+.legend button{border:2px solid;background:#fff;border-radius:999px;padding:4px 12px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit}
+.game-card{font-size:17px;font-weight:600;background:var(--soft);border:2px solid var(--line);border-radius:12px;padding:16px;text-align:center;margin:10px 0}
+.choices{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.fb{margin-top:10px;padding:10px 14px;border-radius:10px;display:none}
+.fb.ok{display:block;background:#ecfdf5;border:1px solid #10b981}
+.fb.bad{display:block;background:#fef2f2;border:1px solid #ef4444}
+.levels{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
+.lvl-out{background:var(--soft);border-radius:10px;padding:14px 16px;min-height:96px;border:1px solid var(--line)}
+.timeline{display:flex;overflow-x:auto;padding:14px 0 4px}
+.tl{flex:1 0 120px;text-align:center;position:relative;cursor:pointer}
+.tl:before{content:"";position:absolute;top:13px;left:0;right:0;height:3px;background:#cbd5e1}
+.tl .dot{width:28px;height:28px;border-radius:50%;background:#fff;border:3px solid #94a3b8;margin:0 auto;position:relative;z-index:1}
+.tl.on .dot{background:#111827;border-color:#111827}
+.tl .yr{font-weight:700;font-size:14px;margin-top:4px}
+.tl-out{background:var(--soft);border-radius:10px;padding:12px 16px;border:1px solid var(--line);margin-top:8px}
+.anat .hl-row{background:#dbeafe!important}.anat .hl-feat{background:#dcfce7!important}.anat .hl-lab{background:#fef3c7!important}
+.tmap{width:100%;height:auto}
+.tmap .node{cursor:pointer}
+.tmap text{pointer-events:none}
+.tmap-out{background:var(--soft);border:1px solid var(--line);border-radius:10px;padding:12px 16px;min-height:70px}
+.split{display:flex;height:46px;border-radius:10px;overflow:hidden;font-weight:600;font-size:13px;color:#fff;margin:10px 0 4px}
+.split div{display:flex;align-items:center;justify-content:center;transition:width .25s;white-space:nowrap;overflow:hidden}
+.split-count{display:flex;font-size:12.5px;color:var(--muted);margin-bottom:6px}
+.split-count div{text-align:center;overflow:hidden;white-space:nowrap}
+.verdict{border-radius:10px;padding:10px 14px;margin:8px 0;font-weight:600}
+.verdict.ok{background:#ecfdf5;border:1px solid #10b981}.verdict.mid{background:#fffbeb;border:1px solid #f59e0b}.verdict.bad{background:#fef2f2;border:1px solid #ef4444}
+.of-out{border-radius:10px;padding:12px 16px;margin-top:8px;border:2px solid}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 10px}
+.tabs button{border:1px solid #cbd5e1;background:#fff;border-radius:8px 8px 0 0;padding:7px 14px;cursor:pointer;font-family:inherit;font-size:14px}
+.tabs button.on{background:#111827;color:#fff;border-color:#111827}
+.tabpane{display:none}.tabpane.on{display:block}.tabpane .ptitle{display:none}
+.we{border:2px solid var(--line);border-radius:12px;padding:14px 18px;margin:8px 0}
+.we .badge{display:inline-block;font-size:12px;font-weight:700;color:#fff;border-radius:999px;padding:2px 10px}
+.we dl,.wiz-out dl{display:grid;grid-template-columns:160px 1fr;gap:4px 12px;margin:8px 0}
+.we dt,.wiz-out dt{font-weight:700}.we dd,.wiz-out dd{margin:0}
+.we table{font-size:13px}
+.we td.lab,.we th.lab{background:#fef3c7}
+.messy td{cursor:pointer}
+.messy td.bad-found{background:#fee2e2!important;font-weight:600}
+.found-list li{color:#065f46}
+.wiz-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px}
+.wiz-grid button{text-align:left;border:2px solid var(--line);background:#fff;border-radius:10px;padding:10px 12px;cursor:pointer;font-family:inherit;font-size:14px}
+.wiz-grid button.on{border-color:#111827;background:#f8fafc}
+.wiz-out{margin-top:12px;border-radius:12px;border:2px solid #111827;padding:14px 18px;display:none}
+.wiz-out.on{display:block}
+.checklist label{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border:1px solid var(--line);border-radius:8px;margin:6px 0;cursor:pointer}
+.checklist input{margin-top:5px;transform:scale(1.2)}
+.checklist small{color:#b91c1c;display:block}
+.meter{height:14px;background:#e5e7eb;border-radius:999px;overflow:hidden;margin:6px 0}
+.meter div{height:100%;width:0;background:#ef4444;transition:.3s}
+.pop{display:grid;grid-template-columns:repeat(20,1fr);gap:4px;max-width:520px}
+.pop span{aspect-ratio:1;border-radius:50%;background:#c7d2fe;border:2px solid transparent}
+.pop span.r{background:#fca5a5}
+.pop span.pick{border-color:#111827;transform:scale(1.15)}
+.pop span.dim{opacity:.25}
+details.qa{border:1px solid var(--line);border-radius:8px;padding:10px 14px;margin:8px 0;background:#fff}
+details.qa summary{cursor:pointer;font-weight:600}
+details.qa .a{margin-top:6px;color:#065f46}
+.quiz-q{border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin:10px 0}
+.quiz-q .opts{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.quiz-q .opts button.right{background:#10b981;color:#fff;border-color:#10b981}
+.quiz-q .opts button.wrong{background:#ef4444;color:#fff;border-color:#ef4444}
+.quiz-q .exp{display:none;margin-top:6px;font-size:14px;color:#374151}
+.quiz-q.done .exp{display:block}
+.grid2{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:8px}
+.grid2 .quiz-q{margin:0}
+footer{text-align:center;color:var(--muted);font-size:13px;margin-top:20px}
+.print-only{display:none}
+body.pm{background:#fff;font-size:12.5px}
+body.pm nav,body.pm .hint,body.pm .stepper,body.pm .legend,body.pm .no-print,body.pm .tabs,body.pm .choices,body.pm .levels,body.pm .timeline,body.pm .wiz-grid,body.pm .wiz-out,body.pm input[type=range],body.pm .range-row{display:none!important}
+body.pm .print-only{display:block}
+body.pm .wrap{max-width:none;padding:0}
+body.pm section{box-shadow:none;border:1px solid var(--line);padding:16px 20px;margin:0 0 14px;break-before:page}
+body.pm section.hero,body.pm section.nobreak{break-before:auto}
+body.pm .tabpane{display:block}
+body.pm .tabpane .ptitle{display:block;font-weight:700;margin:12px 0 4px}
+body.pm .info{min-height:0}
+body.pm .box,body.pm .quiz-q,body.pm .we,body.pm .info,body.pm tr,body.pm .flow,body.pm svg,body.pm .takeaway,body.pm .readout,body.pm details.qa,body.pm figure{break-inside:avoid}
+body.pm h2,body.pm h3,body.pm h4{break-after:avoid}
+@page{size:A4;margin:12mm}
+</style>
+</head><body>
+<nav id="nav">
+  <span class="brand">Session 1</span>
+  <a href="#family">1. AI family</a><a href="#sort">2. Sort it</a><a href="#history">3. History</a><a href="#datasets">4. Datasets &amp; terms</a><a href="#types">5. Types &amp; quality</a><a href="#regcls">6. Supervised</a><a href="#unsup">7. Unsupervised</a><a href="#sampling">8. Sampling &amp; seed</a><a href="#split">9. Train / val / test</a><a href="#fit">10. Over/underfitting</a><a href="#choose">11. Choose data</a><a href="#cheat">12. Cheat sheet</a><a href="#quiz">13. Q&amp;A + quiz</a>
+</nav>
+<div class="wrap">
+
+<section class="hero">
+  <h1>AI Engineering Basics</h1>
+  <p class="lead" style="font-size:17px;margin-top:4px"><b>Session 1:</b> What is AI? and Understanding data</p>
+  <span class="pill">Concept-only: no maths, no coding</span>
+  <span class="pill">Click, explore and try it yourself</span>
+  <span class="pill">Includes a dataset cheat sheet</span>
+  <div class="box key" style="margin-top:14px"><span class="lbl">The story of this session</span>
+  What is AI? → what does it learn from (data)? → what words do we use for data? → learning <b>with</b> answers (supervised) and <b>without</b> answers (unsupervised) → how do we sample and split the data fairly? → how do we know the model really learned (overfitting, underfitting, generalisation)? <b>Next session</b> opens the model and shows <i>how</i> it learns.</div>
+</section>
+
+<!-- =============== 1. AI FAMILY =============== -->
+<section id="family" class="nobreak">
+  <h2>1. The AI family: how everything fits together</h2>
+  <p class="lead">AI, machine learning, deep learning, generative AI and LLMs sit <b>inside each other</b>. Data science is a <b>separate field that overlaps</b> with them. It is not the parent of AI.</p>
+  <span class="hint">👆 Click any circle (or a button below) to learn about it. Use <b>Next</b> to zoom in one level at a time.</span>
+  <div class="row">
+    <div class="col" style="flex:1.25 1 440px">
+      <svg id="venn" viewBox="0 0 760 470" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial, sans-serif">
+        <ellipse class="layer" data-k="ai"  cx="300" cy="235" rx="285" ry="222" fill="#eef2ff" stroke="#4f46e5" stroke-width="3"/>
+        <ellipse class="layer" data-k="ml"  cx="320" cy="262" rx="218" ry="176" fill="#e0f7fa" stroke="#0891b2" stroke-width="3"/>
+        <ellipse class="layer" data-k="dl"  cx="338" cy="290" rx="158" ry="130" fill="#dcfce7" stroke="#059669" stroke-width="3"/>
+        <ellipse class="layer" data-k="gen" cx="352" cy="318" rx="104" ry="90"  fill="#fef3c7" stroke="#d97706" stroke-width="3"/>
+        <ellipse class="layer" data-k="llm" cx="360" cy="345" rx="56"  ry="46"  fill="#fee2e2" stroke="#dc2626" stroke-width="3"/>
+        <g font-weight="700" text-anchor="middle">
+          <text x="260" y="44" font-size="19" fill="#4f46e5">Artificial Intelligence</text>
+          <text x="260" y="62" font-size="12" font-weight="400" fill="#4f46e5">machines doing "smart" tasks</text>
+          <text x="275" y="118" font-size="17" fill="#0891b2">Machine Learning</text>
+          <text x="275" y="135" font-size="12" font-weight="400" fill="#0891b2">learns rules from data</text>
+          <text x="310" y="190" font-size="16" fill="#059669">Deep Learning</text>
+          <text x="310" y="206" font-size="12" font-weight="400" fill="#059669">many-layered neural networks</text>
+          <text x="335" y="258" font-size="15" fill="#d97706">Generative AI</text>
+          <text x="335" y="273" font-size="11.5" font-weight="400" fill="#d97706">creates new content</text>
+          <text x="360" y="344" font-size="15" fill="#dc2626">LLMs</text>
+          <text x="360" y="360" font-size="11" font-weight="400" fill="#dc2626">ChatGPT, Copilot</text>
+        </g>
+        <g id="dsGroup">
+          <ellipse cx="575" cy="255" rx="165" ry="160" fill="rgba(147,51,234,0.07)" stroke="#9333ea" stroke-width="3" stroke-dasharray="9 6" pointer-events="none"/>
+          <g id="dsLabel" data-k="ds">
+            <rect x="596" y="182" width="136" height="62" rx="8" fill="#faf5ff" stroke="#9333ea"/>
+            <text x="664" y="206" text-anchor="middle" font-size="16" font-weight="700" fill="#9333ea">Data Science</text>
+            <text x="664" y="223" text-anchor="middle" font-size="11" fill="#9333ea">statistics, analysis,</text>
+            <text x="664" y="237" text-anchor="middle" font-size="11" fill="#9333ea">dashboards + ML</text>
+          </g>
+        </g>
+      </svg>
+      <div class="legend" id="legend"></div>
+      <div class="stepper">
+        <button class="btn" id="prevBtn">◀ Prev</button><button class="btn primary" id="nextBtn">Next: zoom in ▶</button>
+        <button class="btn" id="dsToggle">Hide Data Science</button><button class="btn" id="resetBtn">Reset</button>
+      </div>
+    </div>
+    <div class="col"><div class="info" id="info"></div></div>
+  </div>
+  <div class="print-only" id="vennAll"></div>
+  <h3>Why AI is the biggest circle: the subset test</h3>
+  <p>A is inside B only if <b>every A is also a B</b>.</p>
+  <table>
+    <tr><th>Question</th><th>Answer</th><th>So…</th></tr>
+    <tr><td>Is every ML system an AI system?</td><td>✅ Yes</td><td>ML is inside AI</td></tr>
+    <tr><td>Is every deep learning model an ML model?</td><td>✅ Yes</td><td>DL is inside ML</td></tr>
+    <tr><td>Is every generative AI model a deep learning model?</td><td>✅ Yes</td><td>GenAI is inside DL</td></tr>
+    <tr><td>Is every LLM a generative AI model?</td><td>✅ Yes</td><td>LLMs are inside GenAI</td></tr>
+    <tr><td>Is every AI system data science?</td><td>❌ No. A rule-based chess engine uses no data.</td><td>AI is not inside data science</td></tr>
+    <tr><td>Is all data science AI?</td><td>❌ No. A sales dashboard is not AI.</td><td>Data science is not inside AI</td></tr>
+  </table>
+  <div class="box key"><span class="lbl">It also follows history</span>
+  AI started first (1956) as the <b>goal</b> of smart machines. Machine learning (1959) was a way to reach it by learning from data. Deep learning is a kind of ML, generative AI is a kind of deep learning, and LLMs are generative AI for language. "Data science" became popular much later (2000s) as the practice of getting insights from data, and it <b>borrows</b> ML as a tool. That shared ML is the overlap.</div>
+  <h3>One problem, every level: the email example</h3>
+  <span class="hint">👆 Click each level to see how the same email task changes.</span>
+  <div class="levels" id="levels"></div>
+  <div class="lvl-out no-print" id="lvlOut"></div>
+  <div class="print-only" id="lvlAll"></div>
+  <h3>Predictive AI vs. generative AI</h3>
+  <table>
+    <tr><th style="width:50%">Predictive AI: "which one / how much?"</th><th>Generative AI: "make me one"</th></tr>
+    <tr><td>"Is this email spam?" → <i>Yes</i></td><td>"Write a polite reply to this email" → <i>a new paragraph</i></td></tr>
+    <tr><td>"Is there a cat in this photo?" → <i>Yes</i></td><td>"Draw a cat wearing sunglasses" → <i>a new image</i></td></tr>
+    <tr><td>"What will this house sell for?" → <i>₹85 lakh</i></td><td>"Write a listing ad for this house" → <i>new text</i></td></tr>
+  </table>
+  <div class="takeaway"><b>Takeaway:</b> AI is the <b>goal</b> → ML <b>learns from data</b> → deep learning uses <b>many layers</b> → generative AI <b>creates</b> → LLMs create <b>language</b>. Data science <b>overlaps</b> through ML but is its own field.</div>
+</section>
+
+<!-- =============== 2. SORT =============== -->
+<section id="sort">
+  <h2>2. Sort it: where does it belong?</h2>
+  <p class="lead">Pick the <b>smallest circle</b> each example fits into. Good for class voting.</p>
+  <div class="no-print" style="text-align:right">Score: <b id="gScore">0 / 0</b></div>
+  <div class="game-card no-print" id="gCard"></div>
+  <div class="choices" id="gChoices"></div>
+  <div class="fb" id="gFb"></div>
+  <div class="no-print" style="text-align:center;margin-top:10px"><button class="btn primary" id="gNext">Next example ▶</button></div>
+  <div class="print-only" id="gAll"></div>
+</section>
+
+<!-- =============== 3. HISTORY =============== -->
+<section id="history">
+  <h2>3. A short history</h2>
+  <p class="lead no-print">Click a year.</p>
+  <div class="timeline" id="timeline"></div>
+  <div class="tl-out no-print" id="tlOut"></div>
+  <div class="print-only" id="tlAll"></div>
+  <div class="box analogy"><span class="lbl">Why deep learning took off only around 2012</span>The ideas were decades old. Three things finally came together: <b>big data</b> (the internet), <b>powerful hardware</b> (GPUs, originally made for gaming) and <b>better training techniques</b>.</div>
+</section>
+
+<!-- =============== 4. DATASETS + TERMS =============== -->
+<section id="datasets">
+  <h2>4. Datasets: the model's textbook (and the words we use)</h2>
+  <p class="lead">From machine learning onwards, everything <b>learns from examples</b>. That collection of examples is a <b>dataset</b>.</p>
+  <div class="box analogy"><span class="lbl">Analogy</span>If the model is a <b>student</b>, the dataset is the <b>textbook</b>. A brilliant student with a wrong textbook still learns the wrong things.</div>
+  <h3>Anatomy of a dataset</h3>
+  <span class="hint">👆 Click a button to highlight that part of the table.</span>
+  <div class="stepper" id="anatBtns">
+    <button class="btn" data-a="row">Row = record</button><button class="btn" data-a="feat">Features = inputs (X)</button><button class="btn" data-a="lab">Label = answer (y)</button>
+  </div>
+  <table class="anat" id="anat">
+    <tr><th>Size (sq ft)</th><th>Bedrooms</th><th>Location</th><th>Age (yrs)</th><th>Price (label)</th></tr>
+    <tr><td>1,200</td><td>2</td><td>Whitefield</td><td>5</td><td>₹75 L</td></tr>
+    <tr><td>1,800</td><td>3</td><td>Indiranagar</td><td>10</td><td>₹1.6 Cr</td></tr>
+    <tr><td>950</td><td>2</td><td>Electronic City</td><td>2</td><td>₹52 L</td></tr>
+    <tr><td>2,400</td><td>4</td><td>Koramangala</td><td>8</td><td>₹2.3 Cr</td></tr>
+  </table>
+  <div class="box example no-print" id="anatOut">Illustrative numbers only. Click a button above.</div>
+  <h3>Same thing, different names</h3>
+  <p>Books, videos and colleagues switch between these names freely. Learn the groups once and you'll never be confused.</p>
+  <table>
+    <tr><th style="width:15%">Idea</th><th>Other names you'll hear</th><th style="width:9%">Symbol</th><th>In the house table</th></tr>
+    <tr><td><b>Feature</b></td><td>input, <b>independent variable</b>, predictor, attribute, column, explanatory variable</td><td><code>x</code> / <code>X</code></td><td>Size, bedrooms, location, age</td></tr>
+    <tr><td><b>Label</b></td><td><b>target</b>, <b>dependent variable</b>, output, response, ground truth, <b>class</b> (in classification)</td><td><code>y</code></td><td>Price</td></tr>
+    <tr><td><b>Row</b></td><td><b>record</b>, sample, example, instance, observation, data point</td><td><code>n</code> = number of rows</td><td>One house</td></tr>
+    <tr><td><b>Numerical feature</b></td><td>continuous or count values: amounts</td><td></td><td>Size, age</td></tr>
+    <tr><td><b>Categorical feature</b></td><td>names or groups</td><td></td><td>Location</td></tr>
+  </table>
+  <div class="box myth"><span class="lbl">⚠️ Careful: X is not the class</span><b>X</b> is always the <b>inputs</b> (features). The <b>class</b> is a name for the <b>answer</b> <code>y</code> in a classification problem (for example "spam" / "not spam"). So: X = features, y = label / target / class.</div>
+  <div class="box analogy"><span class="lbl">Why "independent" and "dependent"?</span>The price <b>depends on</b> the size, so price is the <b>dependent</b> variable. The size doesn't depend on the price, so it's <b>independent</b>. Features are what we feed in; the label is the result we want to predict.</div>
+  <h4>Quick check: which is it?</h4>
+  <div class="grid2" id="termQuiz"></div>
+  <h3>Why datasets matter</h3>
+  <ul>
+    <li><b>They are the only teacher.</b> The model knows nothing except what the data shows it.</li>
+    <li><b>They set the limits.</b> A model trained only on Bengaluru houses can't price houses in Delhi.</li>
+    <li><b>They pass on mistakes.</b> Wrong or biased data produces a wrong or biased model: <b>garbage in, garbage out</b>.</li>
+    <li><b>They test the model.</b> Part of the data is kept aside to check whether the model really learned (section 9).</li>
+  </ul>
+  <h3>The map of learning tasks</h3>
+  <p>What kind of data you have decides what kind of learning you can do. <span class="no-print">👆 Click a box.</span></p>
+  <svg class="tmap" id="tmap" viewBox="0 0 1000 330" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial, sans-serif">
+    <g stroke="#94a3b8" stroke-width="2" fill="none">
+      <path d="M500 58 V80 H160 V104"/><path d="M500 80 V104"/><path d="M500 80 H840 V104"/>
+      <path d="M160 150 V172 H80 V196"/><path d="M160 172 H250 V196"/><path d="M500 150 V172 H420 V196"/><path d="M500 172 H590 V196"/>
+      <path d="M80 242 V260 H40 V276"/><path d="M80 260 H125 V276"/><path d="M250 242 V260 H196 V276"/><path d="M250 260 H270 V276"/><path d="M250 260 H355 V276"/>
+    </g>
+    <g class="node" data-n="ml"><rect x="400" y="12" width="200" height="46" rx="10" fill="#e0f7fa" stroke="#0891b2" stroke-width="2"/><text x="500" y="41" text-anchor="middle" font-size="16" font-weight="700" fill="#0891b2">Machine learning</text></g>
+    <g class="node" data-n="sup"><rect x="60" y="104" width="200" height="46" rx="10" fill="#eef2ff" stroke="#4f46e5" stroke-width="2"/><text x="160" y="125" text-anchor="middle" font-size="15" font-weight="700" fill="#4f46e5">Supervised</text><text x="160" y="142" text-anchor="middle" font-size="11.5" fill="#4f46e5">data WITH answers</text></g>
+    <g class="node" data-n="unsup"><rect x="400" y="104" width="200" height="46" rx="10" fill="#f0fdf4" stroke="#059669" stroke-width="2"/><text x="500" y="125" text-anchor="middle" font-size="15" font-weight="700" fill="#059669">Unsupervised</text><text x="500" y="142" text-anchor="middle" font-size="11.5" fill="#059669">data WITHOUT answers</text></g>
+    <g class="node" data-n="rl"><rect x="740" y="104" width="200" height="46" rx="10" fill="#fff7ed" stroke="#d97706" stroke-width="2"/><text x="840" y="125" text-anchor="middle" font-size="15" font-weight="700" fill="#d97706">Reinforcement</text><text x="840" y="142" text-anchor="middle" font-size="11.5" fill="#d97706">trial, error and reward</text></g>
+    <g class="node" data-n="reg"><rect x="10" y="196" width="140" height="46" rx="10" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/><text x="80" y="217" text-anchor="middle" font-size="14.5" font-weight="700" fill="#2563eb">Regression</text><text x="80" y="234" text-anchor="middle" font-size="11" fill="#2563eb">predict a number</text></g>
+    <g class="node" data-n="cls"><rect x="170" y="196" width="160" height="46" rx="10" fill="#fce7f3" stroke="#db2777" stroke-width="2"/><text x="250" y="217" text-anchor="middle" font-size="14.5" font-weight="700" fill="#db2777">Classification</text><text x="250" y="234" text-anchor="middle" font-size="11" fill="#db2777">predict a category</text></g>
+    <g class="node" data-n="clu"><rect x="350" y="196" width="140" height="46" rx="10" fill="#dcfce7" stroke="#059669" stroke-width="2"/><text x="420" y="217" text-anchor="middle" font-size="14.5" font-weight="700" fill="#059669">Clustering</text><text x="420" y="234" text-anchor="middle" font-size="11" fill="#059669">find groups</text></g>
+    <g class="node" data-n="ano"><rect x="510" y="196" width="160" height="46" rx="10" fill="#dcfce7" stroke="#059669" stroke-width="2"/><text x="590" y="217" text-anchor="middle" font-size="14.5" font-weight="700" fill="#059669">Anomaly detection</text><text x="590" y="234" text-anchor="middle" font-size="11" fill="#059669">find the unusual</text></g>
+    <g class="node" data-n="cont"><rect x="0" y="276" width="80" height="40" rx="8" fill="#fff" stroke="#2563eb" stroke-width="2"/><text x="40" y="300" text-anchor="middle" font-size="12" fill="#2563eb">Continuous</text></g>
+    <g class="node" data-n="count"><rect x="88" y="276" width="74" height="40" rx="8" fill="#fff" stroke="#2563eb" stroke-width="2"/><text x="125" y="300" text-anchor="middle" font-size="12" fill="#2563eb">Count</text></g>
+    <g class="node" data-n="bin"><rect x="166" y="276" width="60" height="40" rx="8" fill="#fff" stroke="#db2777" stroke-width="2"/><text x="196" y="300" text-anchor="middle" font-size="12" fill="#db2777">Binary</text></g>
+    <g class="node" data-n="multi"><rect x="232" y="276" width="76" height="40" rx="8" fill="#fff" stroke="#db2777" stroke-width="2"/><text x="270" y="300" text-anchor="middle" font-size="12" fill="#db2777">Multiclass</text></g>
+    <g class="node" data-n="ml2"><rect x="314" y="276" width="82" height="40" rx="8" fill="#fff" stroke="#db2777" stroke-width="2"/><text x="355" y="300" text-anchor="middle" font-size="12" fill="#db2777">Multi-label</text></g>
+    <text x="840" y="220" text-anchor="middle" font-size="12" fill="#92400e">e.g. game-playing AI, robots,</text>
+    <text x="840" y="236" text-anchor="middle" font-size="12" fill="#92400e">the human-feedback step of ChatGPT</text>
+  </svg>
+  <div class="tmap-out no-print" id="tmapOut">Click any box to see what it means.</div>
+  <div class="box key"><span class="lbl">The one question that decides it</span><b>Does my data have the answer (label) in it?</b> Yes → <b>supervised</b> (section 6). No → <b>unsupervised</b> (section 7). For supervised: <b>is the answer a number or a category?</b> Number → <span class="c-reg">regression</span>. Category → <span class="c-cls">classification</span>.</div>
+  <div class="takeaway"><b>Takeaway:</b> Each <b>row</b> is one record. <b>X</b> = features (independent variables). <b>y</b> = label / target / class (dependent variable).</div>
+</section>
+
+<!-- =============== 5. TYPES & QUALITY =============== -->
+<section id="types">
+  <h2>5. Types of datasets and data quality</h2>
+  <p class="lead">The same dataset can belong to more than one group. <span class="no-print">Click a tab.</span></p>
+  <div class="tabs" id="typeTabs"><button class="on" data-t="t1">By structure</button><button data-t="t2">By labels</button><button data-t="t3">By data type</button><button data-t="t4">By source</button></div>
+  <div class="tabpane on" id="t1"><div class="ptitle">By structure</div><table>
+    <tr><th>Type</th><th>What it is</th><th>Examples</th></tr>
+    <tr><td><b>Structured (tabular)</b></td><td>Neat rows and columns, like Excel</td><td>Bank transactions, sales records, house prices</td></tr>
+    <tr><td><b>Unstructured</b></td><td>No fixed rows or columns</td><td>Emails, reviews, images, audio, video</td></tr>
+    <tr><td><b>Semi-structured</b></td><td>Some organisation, but flexible</td><td>JSON files, system logs, web pages</td></tr></table></div>
+  <div class="tabpane" id="t2"><div class="ptitle">By labels</div><table>
+    <tr><th>Type</th><th>What it is</th><th>Example</th><th>Used for</th></tr>
+    <tr><td><b>Labelled</b></td><td>Each example has its answer</td><td>Photos tagged "cat" or "dog"</td><td>Supervised learning</td></tr>
+    <tr><td><b>Unlabelled</b></td><td>Examples only, no answers</td><td>A million customer records with no groups</td><td>Unsupervised learning</td></tr>
+    <tr><td><b>Partly labelled</b></td><td>A few labelled, most not</td><td>100 tagged scans + 10,000 untagged</td><td>Semi-supervised learning</td></tr></table>
+    <div class="box warn"><span class="lbl">Worth knowing</span>Labelling is often the most expensive part of a project, because humans usually do it by hand (for example, doctors labelling X-rays).</div></div>
+  <div class="tabpane" id="t3"><div class="ptitle">By data type</div><table>
+    <tr><th>Data type</th><th>Example dataset</th><th>Typical problem</th></tr>
+    <tr><td><b>Numbers / tables</b></td><td>Loan applications</td><td>Will this person repay?</td></tr>
+    <tr><td><b>Text</b></td><td>Product reviews</td><td>Positive or negative?</td></tr>
+    <tr><td><b>Images</b></td><td>Chest X-rays</td><td>Any sign of disease?</td></tr>
+    <tr><td><b>Audio</b></td><td>Voice recordings</td><td>Speech to text</td></tr>
+    <tr><td><b>Video</b></td><td>CCTV footage</td><td>Detect unusual activity</td></tr>
+    <tr><td><b>Time series</b></td><td>Daily electricity use</td><td>What will tomorrow look like?</td></tr></table></div>
+  <div class="tabpane" id="t4"><div class="ptitle">By source</div><table>
+    <tr><th>Source</th><th>Examples</th><th>Good for</th></tr>
+    <tr><td><b>Public / open</b></td><td>Kaggle, Hugging Face, UCI, data.gov.in</td><td>Learning and experiments</td></tr>
+    <tr><td><b>Internal / company</b></td><td>Support tickets, sales data, logs</td><td>Real business problems (needs permission)</td></tr>
+    <tr><td><b>Collected / scraped</b></td><td>Surveys, sensors, web pages</td><td>When nothing suitable exists (check the legal side)</td></tr>
+    <tr><td><b>Synthetic</b></td><td>Generated by a program or by AI</td><td>When real data is rare, private or expensive</td></tr></table></div>
+  <h3>Spot the problems: a messy dataset</h3>
+  <span class="hint">👆 This customer table has <b>6 hidden problems</b>. Click the cells you think are wrong.</span>
+  <table class="messy" id="messy">
+    <tr><th>Customer ID</th><th>Name</th><th>City</th><th>Age</th><th>Monthly spend</th><th>Cancelled?</th></tr>
+    <tr><td>C001</td><td>Priya</td><td>Bengaluru</td><td>29</td><td>₹2,400</td><td>No</td></tr>
+    <tr><td>C002</td><td>Rahul</td><td data-bad="Inconsistent format: 'Bangalore' and 'Bengaluru' are the same city written differently.">Bangalore</td><td>34</td><td>₹1,900</td><td>Yes</td></tr>
+    <tr><td>C003</td><td>Anita</td><td>Mumbai</td><td data-bad="Missing value: age is blank.">&nbsp;</td><td>₹3,100</td><td>No</td></tr>
+    <tr><td>C004</td><td>Vikram</td><td>Chennai</td><td data-bad="Outlier: an age of 290 is impossible, probably a typo for 29.">290</td><td>₹2,050</td><td>No</td></tr>
+    <tr><td data-bad="Duplicate: C001 (Priya) appears twice.">C001</td><td>Priya</td><td>Bengaluru</td><td>29</td><td>₹2,400</td><td>No</td></tr>
+    <tr><td>C006</td><td>Meera</td><td>Delhi</td><td>41</td><td data-bad="Unit error: ₹1.2 lakh per month doesn't match the others; possibly yearly spend or a typo.">₹1,20,000</td><td>No</td></tr>
+    <tr><td>C007</td><td>Arjun</td><td>Pune</td><td>26</td><td>₹2,700</td><td data-bad="Inconsistent label: 'Y' should be 'Yes'. Labels must use one consistent format.">Y</td></tr>
+  </table>
+  <p class="no-print">Found: <b id="messyCount">0</b> / 6 &nbsp; <button class="btn" id="messyReveal">Reveal all</button></p>
+  <ul class="found-list" id="messyList"></ul>
+  <h3>Common data quality problems</h3>
+  <table>
+    <tr><th>Problem</th><th>Example</th></tr>
+    <tr><td><b>Missing values</b></td><td>Age not filled in for 20% of customers</td></tr>
+    <tr><td><b>Duplicates</b></td><td>One customer counted three times</td></tr>
+    <tr><td><b>Wrong labels</b></td><td>A dog photo tagged "cat"</td></tr>
+    <tr><td><b>Inconsistent format</b></td><td>"Bengaluru", "Bangalore", "BLR"</td></tr>
+    <tr><td><b>Outliers</b></td><td>A house with 45 bedrooms</td></tr>
+    <tr><td><b>Imbalance</b></td><td>99 normal transactions for every 1 fraud</td></tr>
+    <tr><td><b>Bias</b></td><td>A hiring dataset with mostly one gender</td></tr>
+    <tr><td><b>Outdated</b></td><td>Shopping data from before online payments were common</td></tr>
+  </table>
+  <div class="box example"><span class="lbl">Why imbalance tricks us</span>If 99% of transactions are normal, a lazy model that <i>always</i> says "not fraud" is <b>99% accurate</b>, and it catches zero fraud.</div>
+  <div class="takeaway"><b>Takeaway:</b> The dataset is the model's <b>teacher</b>. A model is only as good as the data it learns from.</div>
+</section>
+
+<!-- =============== 6. SUPERVISED =============== -->
+<section id="regcls">
+  <h2>6. Supervised learning: regression vs. classification</h2>
+  <p class="lead">In supervised learning, every example has an answer (label). What <b>kind</b> of answer it is decides the type of problem.</p>
+  <div class="row">
+    <div class="col"><div class="we" style="border-color:#2563eb">
+      <h3 style="margin-top:0" class="c-reg">📈 Regression: "How much? How many?"</h3>
+      <p>The answer is a <b>number on a scale</b>. Being "close" matters: predicting ₹74 L when the truth is ₹75 L is a good guess.</p>
+      <p><b>Examples:</b> house price, delivery time, tomorrow's temperature, number of tickets tomorrow.</p></div></div>
+    <div class="col"><div class="we" style="border-color:#db2777">
+      <h3 style="margin-top:0" class="c-cls">🏷️ Classification: "Which one? Which group?"</h3>
+      <p>The answer is a <b>category (a name or tag)</b>. There's no "close": an email is either spam or not spam.</p>
+      <p><b>Examples:</b> spam / not spam, which team gets this ticket, which digit is in an image.</p></div></div>
+  </div>
+  <div class="box key"><span class="lbl">The 2-second test</span>Ask: <b>"Can I take an average of the answers, and does 'close' make sense?"</b><br>✅ Yes → <span class="c-reg">regression</span>. ❌ No (you can't average "Billing" and "Login") → <span class="c-cls">classification</span>.</div>
+  <h3>Continuous vs. discrete: clearing up a common confusion</h3>
+  <table>
+    <tr><th>Kind of answer</th><th>What it means</th><th>Examples</th><th>Usually solved with</th></tr>
+    <tr><td><b>Continuous number</b></td><td>Any value, including decimals</td><td>₹74.6 L, 27.3°C, 18.5 minutes</td><td class="c-reg">Regression</td></tr>
+    <tr><td><b>Discrete count</b></td><td>Whole numbers only, but still an amount</td><td>Tickets tomorrow: 0, 1, 2, … 140</td><td class="c-reg">Regression (count regression)</td></tr>
+    <tr><td><b>Discrete category</b></td><td>A fixed set of names or groups</td><td>Spam / not spam; Billing / Login / Bug</td><td class="c-cls">Classification</td></tr>
+  </table>
+  <div class="box myth"><span class="lbl">⚠️ Trap: numbers that are really categories</span>A PIN code, an employee ID or a product code <b>look</b> like numbers but are really <b>names</b>, so predicting them is <span class="c-cls">classification</span>. <b>In-between case:</b> a 1–5 star rating is ordered, so it can be treated either way.</div>
+  <h3>Types of regression (concept level)</h3>
+  <table>
+    <tr><th>Type</th><th>Plain meaning</th><th>Example</th></tr>
+    <tr><td><b>Simple</b></td><td>One input predicts the number</td><td>House size → price</td></tr>
+    <tr><td><b>Multiple</b></td><td>Many inputs together predict the number</td><td>Size + location + age → price</td></tr>
+    <tr><td><b>Linear</b></td><td>Roughly a straight line</td><td>Every extra 100 sq ft adds about the same amount</td></tr>
+    <tr><td><b>Non-linear</b></td><td>The relationship curves or flattens out</td><td>Crop yield rises with fertiliser, then flattens, then drops</td></tr>
+    <tr><td><b>Count</b></td><td>Whole-number counts that can't go below zero</td><td>Patient visits to a clinic tomorrow</td></tr>
+  </table>
+  <h3>Types of classification</h3>
+  <table>
+    <tr><th>Type</th><th>Plain meaning</th><th>Example</th></tr>
+    <tr><td><b>Binary</b></td><td>Exactly <b>2</b> possible answers</td><td>Spam / not spam · repay / default</td></tr>
+    <tr><td><b>Multiclass</b></td><td><b>3 or more</b> answers; pick exactly <b>one</b></td><td>Ticket → Billing, Technical, Account or Other</td></tr>
+    <tr><td><b>Multi-label</b></td><td>Several answers can be true <b>at once</b></td><td>A movie tagged Action + Comedy</td></tr>
+  </table>
+  <div class="box analogy"><span class="lbl">Analogy</span><b>Binary</b> = a light switch. <b>Multiclass</b> = a TV remote (exactly one channel). <b>Multi-label</b> = pizza toppings (as many as apply).</div>
+  <h3>How do we judge success? (plain words)</h3>
+  <table>
+    <tr><th></th><th class="c-reg">Regression</th><th class="c-cls">Classification</th></tr>
+    <tr><td><b>Main question</b></td><td>"On average, how far off are we?"</td><td>"How often are we right, and do we catch the important cases?"</td></tr>
+    <tr><td><b>Example</b></td><td>"Our price predictions are off by about ₹4 L on average."</td><td>"We catch 90 of every 100 frauds; 5 of every 100 alerts are false alarms."</td></tr>
+  </table>
+  <h3>Try it: regression or classification?</h3>
+  <p class="no-print">Score: <b id="rcScore">0 / 0</b></p>
+  <div class="grid2" id="rcGrid"></div>
+  <h3>Worked examples</h3>
+  <span class="hint">👆 Pick a tab. The <span style="background:#fef3c7;padding:0 4px">yellow</span> column is the label.</span>
+  <div class="tabs" id="weTabs"></div>
+  <div id="weBox"></div>
+  <div class="takeaway"><b>Takeaway:</b> A <b>number on a scale</b> → regression (continuous or count). A <b>category</b> → classification (binary, multiclass or multi-label).</div>
+</section>
+
+<!-- =============== 7. UNSUPERVISED =============== -->
+<section id="unsup">
+  <h2>7. Unsupervised learning: when there are no labels</h2>
+  <p class="lead">So far every dataset had an answer column (y). But very often we have <b>only the features (X)</b> and no answers at all. Can a machine still learn something? <b>Yes.</b> It can discover <b>structure</b> by itself: which rows are similar, which rows are strange.</p>
+  <div class="box analogy"><span class="lbl">Analogy: sorting a mixed box of LEGO</span>Nobody gives you instructions or names for the pieces. You still naturally put similar pieces together: by colour, by size, by shape. You <b>found the groups yourself</b>. That is unsupervised learning.</div>
+
+  <h3>Same data, two situations</h3>
+  <div class="row">
+    <div class="col"><figure style="margin:0"><svg class="chart" id="svU1" viewBox="0 0 400 300"></svg><figcaption style="font-size:13px;padding:4px"><b>Supervised:</b> every point comes with its answer (colour = label). The model learns to predict the colour of a new point.</figcaption></figure></div>
+    <div class="col"><figure style="margin:0"><svg class="chart" id="svU2" viewBox="0 0 400 300"></svg><figcaption style="font-size:13px;padding:4px"><b>Unsupervised:</b> the same points, but <b>no answers</b> (all grey). The model notices the points naturally form groups, and draws them.</figcaption></figure></div>
+  </div>
+
+  <h3>Try it: watch the machine find customer groups (clustering)</h3>
+  <span class="hint">👆 90 shoppers, with only two features: visits per month and average spend per visit. No labels. Choose how many groups to look for, then press <b>Step</b> repeatedly or <b>Run</b>.</span>
+  <div class="row">
+    <div class="col" style="flex:1.5 1 440px"><svg class="chart" id="km" viewBox="0 0 600 400"></svg></div>
+    <div class="col">
+      <div class="stepper"><label>Number of groups:&nbsp;<select id="kmK"><option>2</option><option selected>3</option><option>4</option><option>5</option></select></label></div>
+      <div class="stepper"><button class="btn primary" id="kmStep">Step ▶</button><button class="btn" id="kmRun">Run ▶▶</button><button class="btn" id="kmReset">Reset</button></div>
+      <div class="readout" id="kmOut"></div>
+      <div class="box key" style="font-size:14px"><span class="lbl">How the machine does it (one popular method)</span>
+      1. Drop a few <b>centre markers</b> (the stars), spread across the data.<br>
+      2. Every customer joins the <b>nearest</b> centre.<br>
+      3. Each centre moves to the <b>middle</b> of its group.<br>
+      4. Repeat 2–3 until nothing changes.</div>
+    </div>
+  </div>
+  <div class="box example"><span class="lbl">The machine finds groups; humans give them meaning</span>
+  With 3 groups, the machine finds something like this, but it only knows "group 1, 2, 3". <b>We</b> look at each group and name it:<br>
+  • <b>Occasional big spenders</b>: few visits, high spend per visit.<br>
+  • <b>Loyal regulars</b>: many visits, small baskets.<br>
+  • <b>Casual browsers</b>: few visits, small spend.<br>
+  The marketing team can now send a different offer to each group, without anyone ever labelling a customer.</div>
+
+  <h3>What clusters can look like</h3>
+  <p>Real groups aren't always neat circles. Different methods are good at different shapes, and some methods can also say <b>"this point doesn't belong to any group"</b> (noise).</p>
+  <div class="gallery" id="gallery"></div>
+
+  <h3>What unsupervised learning is used for</h3>
+  <table>
+    <tr><th style="width:20%">Task</th><th>What the machine does</th><th>Real examples</th></tr>
+    <tr><td><b>Clustering</b></td><td>Puts similar rows into groups nobody defined in advance</td><td>Customer segments · grouping similar news articles · grouping support tickets by topic · grouping patients with similar symptoms</td></tr>
+    <tr><td><b>Anomaly detection</b></td><td>Learns what "normal" looks like and flags rows that don't fit</td><td>Unusual card transactions · a machine sensor behaving strangely · odd login activity</td></tr>
+    <tr><td><b>Association</b></td><td>Finds things that often happen together</td><td>"People who buy bread often buy butter" · "frequently bought together" on shopping sites</td></tr>
+    <tr><td><b>Simplifying data</b> (dimensionality reduction)</td><td>Squeezes many columns into a few, keeping the important information</td><td>Turning 100 survey questions into 3 main themes · making data easier to plot</td></tr>
+  </table>
+
+  <h3>Supervised vs. unsupervised at a glance</h3>
+  <table>
+    <tr><th></th><th>Supervised</th><th>Unsupervised</th></tr>
+    <tr><td><b>Data</b></td><td>X <b>and</b> y (features + answers)</td><td>Only X (features)</td></tr>
+    <tr><td><b>Goal</b></td><td>Predict the answer for new rows</td><td>Discover groups, patterns or odd rows</td></tr>
+    <tr><td><b>How we check it</b></td><td>Compare predictions with the real answers</td><td>No answers to compare with: we check that groups are tight and well separated, and that they <b>make sense</b> to people who know the business</td></tr>
+    <tr><td><b>Example</b></td><td>"Is this transaction fraud?" (using past fraud labels)</td><td>"Which transactions look unusual?" (no labels)</td></tr>
+  </table>
+  <div class="box myth"><span class="lbl">⚠️ Watch out</span>The machine will <b>always</b> find the number of groups you ask for, even if the data has no real groups. Ask for 5 groups in the demo above and it happily makes 5. Choosing the number of groups, and checking the groups mean something, is <b>our</b> job.</div>
+  <div class="takeaway"><b>Takeaway:</b> No labels? The machine can still learn the <b>shape</b> of the data: which rows are similar (clustering), which rows are strange (anomaly detection), and what goes together. Humans then give the groups meaning.</div>
+</section>
+
+<!-- =============== 8. SAMPLING + SEED =============== -->
+<section id="sampling">
+  <h2>8. Sampling: choosing which rows to use (and the random seed)</h2>
+  <p class="lead"><b>Sampling</b> means picking a smaller group (a <b>sample</b>) from a bigger group (the <b>population</b>). It's the first step to splitting data fairly.</p>
+  <div class="box analogy"><span class="lbl">Analogy</span>A cook tastes <b>one spoon</b> of soup to judge the whole pot. That only works if the soup is stirred well. A bad sample (only the top layer) gives the wrong answer.</div>
+  <h3>Where sampling shows up in ML</h3>
+  <table>
+    <tr><th>When</th><th>What we sample</th></tr>
+    <tr><td><b>Collecting data</b></td><td>We can't survey every customer in India, so we survey a sample.</td></tr>
+    <tr><td><b>Splitting data</b></td><td>Train / validation / test sets are samples of the full dataset (next section).</td></tr>
+    <tr><td><b>Training</b></td><td>Every mini-batch is a small random sample of the training rows (Session 2).</td></tr>
+    <tr><td><b>Fixing imbalance</b></td><td>We over-sample the rare class or under-sample the common one.</td></tr>
+  </table>
+  <h3>Try it: random vs. stratified sampling</h3>
+  <span class="hint">👆 200 customers, <b style="color:#dc2626">10% are fraud (red)</b>. Draw a sample of 20 and count the red ones.</span>
+  <div class="row">
+    <div class="col"><div class="pop" id="pop"></div></div>
+    <div class="col">
+      <div class="stepper">
+        <button class="btn" id="smpRand">🎲 Simple random</button><button class="btn" id="smpStrat">⚖️ Stratified</button>
+        <button class="btn" id="smpSys">📏 Systematic (every 10th)</button><button class="btn" id="smpReset">Reset</button>
+      </div>
+      <div class="stepper" style="background:#faf5ff;border:1px solid #e9d5ff;border-radius:10px;padding:8px 10px">
+        <label style="font-size:14px"><input type="checkbox" id="seedOn"> Use a fixed <b>random seed</b>:</label>
+        <input type="number" id="seedVal" value="42" min="0" max="99999">
+      </div>
+      <div class="readout" id="smpOut">Pick a method. The ideal sample of 20 has exactly <b>2</b> red (10%).</div>
+      <p class="no-print" style="font-size:13px;color:#6b7280">Click "Simple random" several times: every click gives a different sample. Now tick the seed box and click again: <b>the same sample every time</b>. Change the seed number and you get a different, but again repeatable, sample.</p>
+    </div>
+  </div>
+  <h3>Types of sampling</h3>
+  <table>
+    <tr><th>Type</th><th>How it works</th><th>Example</th><th>Good / watch out</th></tr>
+    <tr><td><b>Simple random</b></td><td>Every row has an equal chance</td><td>Pick 1,000 random customers</td><td>✅ Fair and simple. ⚠️ Can miss rare groups by bad luck.</td></tr>
+    <tr><td><b>Stratified</b></td><td>Split into groups first, then sample each group in the right proportion</td><td>Keep 10% fraud in train <i>and</i> test</td><td>✅ Best for imbalanced data and train/test splits.</td></tr>
+    <tr><td><b>Systematic</b></td><td>Pick every k-th row</td><td>Every 10th invoice</td><td>✅ Easy. ⚠️ Breaks if the data has a repeating pattern.</td></tr>
+    <tr><td><b>Cluster</b></td><td>Pick whole groups, then use all rows in them</td><td>Pick 5 cities, survey everyone there</td><td>✅ Cheap. ⚠️ Chosen groups may not represent the rest.</td></tr>
+    <tr><td><b>Convenience</b></td><td>Take whatever is easiest</td><td>Survey only your office colleagues</td><td>⚠️ Usually biased. Avoid for real models.</td></tr>
+    <tr><td><b>Over-sampling</b></td><td>Repeat (or create similar) rows of the rare class</td><td>Copy fraud rows so the model sees more</td><td>✅ Helps imbalance. ⚠️ Training data only.</td></tr>
+    <tr><td><b>Under-sampling</b></td><td>Drop some rows of the common class</td><td>Keep 10% of normal transactions</td><td>✅ Balanced, faster. ⚠️ Throws information away.</td></tr>
+  </table>
+  <div class="box key"><span class="lbl">With or without replacement</span><b>Without replacement:</b> once a row is picked, it can't be picked again (normal splitting). <b>With replacement:</b> a row can be picked more than once (<b>bootstrapping</b>, used later by random forests).</div>
+
+  <h3>The random seed (random state): making "random" repeatable</h3>
+  <p>Computers don't produce truly random numbers. They follow a long, fixed recipe that only <b>looks</b> random. The <b>seed</b> is the <b>starting point</b> of that recipe. Same seed → the same "random" sequence → the <b>same sample, the same split, every time</b>.</p>
+  <div class="box analogy"><span class="lbl">Analogy: shuffling cards with a recorded shuffle</span>If you write down exactly how you shuffled a deck, a friend can repeat the shuffle and get the <b>identical order</b>. The seed is that written-down shuffle.</div>
+  <table>
+    <tr><th style="width:24%">Why it matters</th><th>Example</th></tr>
+    <tr><td><b>Reproducibility</b></td><td>You and a colleague both split the data with seed 42 → you get exactly the same training and test rows, so your results match.</td></tr>
+    <tr><td><b>Fair comparisons</b></td><td>Comparing two models? Use the same seed so both see the <b>same</b> split. Otherwise one may just have got an easier test set.</td></tr>
+    <tr><td><b>Debugging</b></td><td>If a result looks strange, you can re-run and get the same thing, instead of a different result each time.</td></tr>
+  </table>
+  <p>In tools you'll see it as <code>random_state</code> or <code>seed</code> (for example, when splitting data into train and test). The number itself doesn't matter (42 is just a popular joke choice); what matters is <b>using the same one</b>.</p>
+  <div class="box myth"><span class="lbl">⚠️ Don't "shop" for a lucky seed</span>Trying many seeds and keeping the one with the best test score is cheating yourself: the good score was luck, not a better model.</div>
+
+  <div class="box warn"><span class="lbl">Golden rule</span>Split into train / validation / test <b>first</b>. Only then over- or under-sample, and only the <b>training</b> set. Otherwise copies of a row can end up in both train and test (data leakage).</div>
+  <div class="takeaway"><b>Takeaway:</b> A good sample looks like the population in miniature. Use <b>stratified</b> sampling when a class is rare, and a fixed <b>seed / random_state</b> so anyone can reproduce your exact sample.</div>
+</section>
+
+<!-- =============== 9. SPLIT =============== -->
+<section id="split">
+  <h2>9. Train, validation and test: in depth</h2>
+  <p class="lead">Why we split the data, why roughly 80% goes to training, and what each part is really for.</p>
+  <div class="box analogy"><span class="lbl">The school analogy</span>
+  📘 <b>Training set = textbook and class notes.</b> The student learns from these.<br>
+  📝 <b>Validation set = practice / mock tests.</b> The teacher checks what's working and adjusts.<br>
+  🎓 <b>Test set = the final board exam.</b> Taken <b>once</b>, at the end, with unseen questions. The honest score.</div>
+  <h3>Why split at all?</h3>
+  <p>If we test a model on the examples it learned from, it can score 100% just by <b>memorising</b>, like a student who memorised the answer key. We only know it truly learned by checking on <b>examples it has never seen</b>.</p>
+  <h3>Why about 80% for training?</h3>
+  <div class="row">
+    <div class="col"><div class="box key" style="margin:0"><span class="lbl">More data for training →</span>the model learns patterns better. <b>But</b> less is left to check it, so the score is less trustworthy.</div></div>
+    <div class="col"><div class="box warn" style="margin:0"><span class="lbl">More data for checking →</span>a more reliable score. <b>But</b> the model learned from fewer examples.</div></div>
+  </div>
+  <p>80/10/10 or 70/15/15 is a common starting point: <b>most</b> data to learn from, <b>enough</b> kept aside for a fair check. It's a habit, <b>not a rule</b>:</p>
+  <table>
+    <tr><th>Dataset size</th><th>Typical split (train / val / test)</th><th>Why</th></tr>
+    <tr><td><b>Small</b> (hundreds to a few thousand)</td><td>60 / 20 / 20, or <b>cross-validation</b></td><td>Check sets need a bigger share to have enough examples.</td></tr>
+    <tr><td><b>Medium</b> (tens of thousands)</td><td>70 / 15 / 15 or 80 / 10 / 10</td><td>The classic balance.</td></tr>
+    <tr><td><b>Huge</b> (millions)</td><td>98 / 1 / 1</td><td>1% of 10 million is still 100,000 rows: plenty to check with.</td></tr>
+  </table>
+  <h4>Try it: split calculator</h4>
+  <div class="stepper" style="margin-bottom:6px">
+    <label>Dataset size:&nbsp;<select id="dsSize"><option value="500">500 rows (small)</option><option value="5000">5,000 rows</option><option value="100000" selected>100,000 rows</option><option value="10000000">10 million rows (huge)</option></select></label>
+    <button class="btn" data-p="60,20">60/20/20</button><button class="btn" data-p="70,15">70/15/15</button><button class="btn" data-p="80,10">80/10/10</button><button class="btn" data-p="98,1">98/1/1</button>
+  </div>
+  <div class="split"><div id="sTr" style="background:#4f46e5"></div><div id="sVa" style="background:#0891b2"></div><div id="sTe" style="background:#d97706"></div></div>
+  <div class="split-count"><div id="cTr"></div><div id="cVa"></div><div id="cTe"></div></div>
+  <div class="row range-row">
+    <div class="col"><label>Training share: <b id="trV">80%</b></label><input type="range" id="trR" min="50" max="98" value="80"></div>
+    <div class="col"><label>Validation share: <b id="vaV">10%</b></label><input type="range" id="vaR" min="1" max="25" value="10"></div>
+  </div>
+  <div class="verdict ok no-print" id="verdict"></div>
+  <p style="font-size:14px">💡 The split is random, so it uses a <b>seed / random_state</b> (section 8) to make it repeatable. For rare classes, make it a <b>stratified</b> split.</p>
+  <h3>What exactly is the validation set for?</h3>
+  <ul>
+    <li><b>Which model?</b> Compare a simple and a complex model; keep whichever does better on validation.</li>
+    <li><b>Which settings?</b> Settings we choose <i>before</i> training (how complex the model is, how long to train) are called <b>hyperparameters</b>. Try a few and keep the best on validation.</li>
+    <li><b>When to stop training?</b> Watch the validation score and stop when it stops improving (section 10).</li>
+  </ul>
+  <div class="box myth"><span class="lbl">⚠️ Common myth: "Validation is only for deep learning"</span><b>Not true.</b> Validation is used in classic machine learning too. The difference is <i>how</i>:
+  <table style="margin-top:8px;background:#fff">
+    <tr><th>Where</th><th>How validation is used</th></tr>
+    <tr><td><b>Classic ML</b></td><td>To <b>compare models and pick settings</b>. With small data, often <b>cross-validation</b>: split training data into 5 parts, train on 4, check on the 5th, rotate 5 times and average.</td></tr>
+    <tr><td><b>Deep learning</b></td><td>Checked <b>after every full pass</b> through the training data (an <b>epoch</b>, explained in Session 2). Training stops when validation stops improving: <b>early stopping</b>.</td></tr>
+    <tr><td><b>Fine-tuning an LLM</b></td><td>Same idea: a held-out validation set is checked during fine-tuning so the model doesn't just memorise the small dataset.</td></tr>
+  </table></div>
+  <div class="box myth"><span class="lbl">⚠️ Common myth: "The validation set prevents overfitting"</span>It <b>detects</b> overfitting, like a smoke alarm. <b>We</b> then act on it (section 10).</div>
+  <h3>The test set: why only once, at the very end?</h3>
+  <p>If we keep checking the test score and tweaking the model, we slowly <b>tune the model to the test set</b>. The final score becomes <b>too optimistic</b>, and the model does worse in the real world.</p>
+  <div class="box analogy"><span class="lbl">Analogy</span>A teacher who sees the board-exam questions and keeps adjusting lessons to match them: marks go up, real understanding doesn't.</div>
+  <h3>The full workflow</h3>
+  <div class="flow">
+    <div class="st"><span class="sn">Step 1</span>Split the data <b>first</b> (with a seed)</div>
+    <div class="st"><span class="sn">Step 2</span>Train on the <b>training set</b></div>
+    <div class="st"><span class="sn">Step 3</span>Check on the <b>validation set</b></div>
+    <div class="st"><span class="sn">Step 4</span>Adjust the model or settings; repeat 2–3</div>
+    <div class="st"><span class="sn">Step 5</span>Pick the best model using validation</div>
+    <div class="st"><span class="sn">Step 6</span>Check <b>once</b> on the <b>test set</b>. Report it.</div>
+  </div>
+  <h3>Splitting mistakes to avoid</h3>
+  <table>
+    <tr><th>Mistake</th><th>Why it's a problem</th><th>Do this instead</th></tr>
+    <tr><td><b>Shuffling time-based data</b></td><td>The model "sees the future" during training</td><td>Train on the past, validate on later data, test on the most recent</td></tr>
+    <tr><td><b>Same person in train and test</b></td><td>The model recognises the patient, not the disease</td><td>Split by person / patient / customer, not by row</td></tr>
+    <tr><td><b>Duplicates across splits</b></td><td>The test set secretly contains training rows</td><td>Remove duplicates before splitting</td></tr>
+    <tr><td><b>Rare class missing from a split</b></td><td>With 1% fraud, a random split may put almost none in test</td><td>Use a <b>stratified split</b></td></tr>
+    <tr><td><b>Cleaning using the whole dataset</b></td><td>Test-set information leaks into training</td><td>Split first, then decide cleaning steps on training data only</td></tr>
+    <tr><td><b>No seed</b></td><td>Every run gives a different split, so results can't be reproduced</td><td>Fix the <b>random_state</b></td></tr>
+  </table>
+  <div class="takeaway"><b>Takeaway:</b> <b>Train</b> to learn, <b>validate</b> to choose and tune (in classic ML <i>and</i> deep learning), <b>test</b> once for the honest score.</div>
+</section>
+
+<!-- =============== 10. FIT: OVER/UNDER, BIAS/VARIANCE =============== -->
+<section id="fit">
+  <h2>10. Did the model really learn? Underfitting, overfitting, bias and variance</h2>
+  <p class="lead">The goal is <b>not</b> a perfect score on the training data. The goal is a model that does well on <b>new data it has never seen</b>. This is called <b>generalisation</b>.</p>
+  <div class="box analogy"><span class="lbl">Three students preparing for an exam</span>
+  🙁 <b>Student A</b> barely studied: does badly on practice papers <i>and</i> the real exam. → <b>Underfitting</b><br>
+  🤓 <b>Student B</b> memorised every past paper word for word: 100% on past papers, but fails when the exam asks the same idea in a new way. → <b>Overfitting</b><br>
+  😊 <b>Student C</b> understood the concepts: does well on past papers <i>and</i> the new exam. → <b>Good fit (generalises)</b></div>
+
+  <h3>How to diagnose it: compare training and test scores</h3>
+  <p>Example: a classification model, scored by accuracy (% of correct answers).</p>
+  <table>
+    <tr><th>Case</th><th class="num">Training accuracy</th><th class="num">Test accuracy</th><th>Gap</th><th>Diagnosis</th></tr>
+    <tr><td><b>A</b></td><td class="num">62%</td><td class="num">60%</td><td>Small, but both low</td><td>🟡 <b>Underfitting</b> (high bias): hasn't learned the pattern even on data it has seen</td></tr>
+    <tr><td><b>B</b></td><td class="num">99%</td><td class="num">71%</td><td><b>Big gap</b></td><td>🔴 <b>Overfitting</b> (high variance): learned the training data "too well", including its noise, so it doesn't work on new data</td></tr>
+    <tr class="hl"><td><b>C</b></td><td class="num">91%</td><td class="num">89%</td><td>Small, both high</td><td>✅ <b>Good fit</b>: learned the real pattern and generalises</td></tr>
+    <tr><td><b>D</b></td><td class="num">100%</td><td class="num">100%</td><td>None</td><td>🚩 <b>Suspicious!</b> Too good to be true. Check for data leakage (a test row or the answer hidden in the features).</td></tr>
+  </table>
+  <div class="box key"><span class="lbl">Rule of thumb</span>
+  <b>Both scores low</b> → underfitting. &nbsp; <b>Training high, test much lower</b> → overfitting. &nbsp; <b>Both high and close</b> → good fit.<br>
+  (During building, compare training with <b>validation</b>; the test set is saved for the final check.)</div>
+
+  <h3>Bias and variance: the two kinds of mistakes</h3>
+  <table>
+    <tr><th style="width:14%"></th><th>Plain meaning</th><th>Shows up as</th><th>Goes with</th></tr>
+    <tr><td><b>Bias</b></td><td>The model's assumptions are <b>too simple</b>, so it misses the real pattern in the <b>same way</b> every time. (Example: drawing a straight line through data that clearly curves.)</td><td>Low training score <i>and</i> low test score</td><td><b>Underfitting</b></td></tr>
+    <tr><td><b>Variance</b></td><td>The model is <b>too sensitive</b> to the exact training rows. Change the training data a little and the model changes a lot, because it learned the noise.</td><td>High training score, much lower test score</td><td><b>Overfitting</b></td></tr>
+  </table>
+  <p>Picture 4 players throwing darts, where the bullseye is the true answer:</p>
+  <div class="dart" id="dart"></div>
+  <div class="box example"><span class="lbl">The trade-off</span>Making a model <b>more complex</b> lowers bias (it can follow the pattern better) but raises variance (it starts following the noise too). Making it <b>simpler</b> does the opposite. We look for the <b>middle</b>: complex enough to catch the pattern, simple enough to ignore the noise.</div>
+
+  <h3>Try it: model complexity</h3>
+  <span class="hint">👆 Orange dots = training data. Blue hollow dots = test data (never seen during training). Move the slider to make the model's curve more flexible.</span>
+  <div class="row">
+    <div class="col" style="flex:1.5 1 440px"><svg class="chart" id="cx" viewBox="0 0 600 360"></svg></div>
+    <div class="col">
+      <label class="sl">Model flexibility: <b id="cxV"></b></label><input type="range" id="cxD" min="1" max="11" step="1" value="1">
+      <div class="readout" id="cxOut" style="margin-top:8px"></div>
+      <div class="status" id="cxStatus"></div>
+    </div>
+  </div>
+  <div class="print-only box key"><span class="lbl">What the slider shows</span><b>Low flexibility</b> (straight line): misses the curve, so both errors are high: underfitting. <b>Medium</b>: follows the real curve, and both errors are low: good fit. <b>High flexibility</b>: the curve wiggles through every training dot, so training error is almost 0 but test error shoots up: overfitting.</div>
+
+  <h3>Watch it happen during training</h3>
+  <p>The same story over time. Early in training the model hasn't learned enough; later it starts memorising. The <b>validation</b> error tells us when to stop.</p>
+  <span class="hint">👆 Drag the slider to "train" the model for longer.</span>
+  <svg id="ofChart" class="chart" viewBox="0 0 700 330" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial, sans-serif">
+    <rect x="60" y="20" width="200" height="260" fill="#fef3c7" opacity=".45"/><rect x="260" y="20" width="130" height="260" fill="#dcfce7" opacity=".6"/><rect x="390" y="20" width="290" height="260" fill="#fee2e2" opacity=".45"/>
+    <text x="160" y="40" text-anchor="middle" font-size="13" font-weight="700" fill="#92400e">Underfitting</text><text x="325" y="40" text-anchor="middle" font-size="13" font-weight="700" fill="#065f46">Sweet spot</text><text x="535" y="40" text-anchor="middle" font-size="13" font-weight="700" fill="#991b1b">Overfitting</text>
+    <line x1="60" y1="280" x2="680" y2="280" stroke="#374151" stroke-width="2"/><line x1="60" y1="20" x2="60" y2="280" stroke="#374151" stroke-width="2"/>
+    <text x="370" y="310" text-anchor="middle" font-size="13" fill="#374151">Training time →</text>
+    <text x="22" y="150" text-anchor="middle" font-size="13" fill="#374151" transform="rotate(-90 22 150)">Mistakes (error) →</text>
+    <path id="trainPath" fill="none" stroke="#4f46e5" stroke-width="3.5"/><path id="valPath" fill="none" stroke="#0891b2" stroke-width="3.5" stroke-dasharray="8 5"/>
+    <line id="ofLine" x1="0" y1="20" x2="0" y2="280" stroke="#111827" stroke-width="2"/><circle id="ofTr" r="6" fill="#4f46e5"/><circle id="ofVa" r="6" fill="#0891b2"/>
+    <g font-size="13"><rect x="480" y="190" width="185" height="50" rx="6" fill="#fff" stroke="#e5e7eb"/>
+    <line x1="490" y1="207" x2="520" y2="207" stroke="#4f46e5" stroke-width="3.5"/><text x="528" y="211">Training error</text>
+    <line x1="490" y1="228" x2="520" y2="228" stroke="#0891b2" stroke-width="3.5" stroke-dasharray="8 5"/><text x="528" y="232">Validation error</text></g>
+  </svg>
+  <input type="range" id="ofR" min="0" max="100" value="45">
+  <div class="of-out no-print" id="ofOut"></div>
+
+  <h3>Why it happens, and what to do</h3>
+  <table>
+    <tr><th style="width:14%"></th><th>Common reasons</th><th>What to try</th></tr>
+    <tr><td><b>Underfitting</b><br>(high bias)</td><td>
+      • Model too simple for the pattern (a straight line for a curve)<br>
+      • Features don't carry enough information (predicting house price from paint colour only)<br>
+      • Not trained long enough<br>
+      • Too much regularisation (Session 2)</td><td>
+      • Use a more flexible model<br>
+      • Add better or more informative features<br>
+      • Train longer<br>
+      • Reduce regularisation</td></tr>
+    <tr><td><b>Overfitting</b><br>(high variance)</td><td>
+      • Model too complex for the amount of data<br>
+      • Too little training data<br>
+      • Noisy data or wrong labels (the model memorises the mistakes)<br>
+      • Trained for too long<br>
+      • Too many irrelevant features (ID numbers, house number…)</td><td>
+      • Get more (and cleaner) training data<br>
+      • Use a simpler model<br>
+      • Add regularisation (L1 / L2, Session 2)<br>
+      • Early stopping, using the validation set<br>
+      • Remove irrelevant features<br>
+      • Use cross-validation to check the result is stable</td></tr>
+  </table>
+
+  <h3>What a good model looks like</h3>
+  <div class="box key"><span class="lbl">A generalised model</span>
+  ✅ Good score on data it has <b>never seen</b> (validation and test)<br>
+  ✅ Training and test scores are <b>close</b> to each other (small gap)<br>
+  ✅ Learned the <b>real pattern</b>, not the noise or quirks of the training rows<br>
+  ✅ Its result stays similar with a different split or seed</div>
+  <div class="box myth"><span class="lbl">Why we don't chase 100% accuracy</span>
+  • <b>Real data has noise.</b> Labels contain mistakes, and some things are simply unpredictable (two identical-looking loan applicants can behave differently). No model can be right about pure chance.<br>
+  • <b>100% on training data usually means memorising</b>, which is exactly overfitting.<br>
+  • <b>100% on the test set</b> is more often a sign of <b>data leakage</b> than of a brilliant model.<br>
+  • <b>"Good enough" depends on the problem.</b> 90% might be great for recommending movies and not enough for a medical test. Compare against a simple baseline (for example "always predict the most common class") and against how well humans do.</div>
+  <div class="takeaway"><b>Takeaway:</b> <b>Underfitting</b> (high bias) = too simple: bad on train <i>and</i> test. <b>Overfitting</b> (high variance) = memorised: great on train, poor on test. Aim for a <b>generalised</b> model: good and similar scores on data it has never seen, not 100%.</div>
+</section>
+
+<!-- =============== 11. CHOOSE =============== -->
+<section id="choose">
+  <h2>11. Choosing the right dataset for a problem</h2>
+  <p class="lead">A simple model with the <b>right data</b> usually beats a fancy model with the <b>wrong data</b>.</p>
+  <h3>The 5-step method</h3>
+  <table>
+    <tr><th>Step</th><th>Ask yourself</th><th>Example: "Detect fake product reviews"</th></tr>
+    <tr><td><b>1. Define the problem</b></td><td>What should the model do, in one sentence?</td><td>Say whether a review is genuine or fake.</td></tr>
+    <tr><td><b>2. Define the output</b></td><td>A number, a category, a group or new content?</td><td>Genuine / fake → binary classification</td></tr>
+    <tr><td><b>3. Define the inputs</b></td><td>What would a human expert look at?</td><td>Review text, rating, reviewer history, time posted</td></tr>
+    <tr><td><b>4. Check the labels</b></td><td>Do answers exist, or must someone create them? (No labels → consider unsupervised)</td><td>Need reviews already marked genuine or fake</td></tr>
+    <tr><td><b>5. Evaluate candidates</b></td><td>Run each dataset through the health check below</td><td>Public dataset vs. the company's own flagged reviews</td></tr>
+  </table>
+  <h3>Try it: problem → dataset finder</h3>
+  <span class="hint">👆 Pick a problem statement to see what kind of data it needs.</span>
+  <div class="wiz-grid" id="wizGrid"></div>
+  <div class="wiz-out" id="wizOut"></div>
+  <div class="print-only" id="wizAll"></div>
+  <h3>Dataset health check</h3>
+  <span class="hint">👆 Think of a dataset and tick every point it passes.</span>
+  <div class="meter no-print"><div id="meterBar"></div></div>
+  <p class="no-print" id="meterTxt" style="margin:2px 0 8px;font-weight:600">0 / 8: not ready</p>
+  <div class="checklist" id="checklist"></div>
+</section>
+
+<!-- =============== 12. CHEAT SHEET =============== -->
+<section id="cheat">
+  <h2>12. Session 1 cheat sheet</h2>
+  <p class="lead">The one page to keep.</p>
+  <h3>① Words</h3>
+  <table>
+    <tr><th>Term</th><th>Also called / meaning</th></tr>
+    <tr><td><b>Feature (X)</b></td><td>input, independent variable, predictor, attribute, column</td></tr>
+    <tr><td><b>Label (y)</b></td><td>target, dependent variable, output, ground truth, class (classification)</td></tr>
+    <tr><td><b>Row</b></td><td>record, sample, example, instance, observation</td></tr>
+    <tr><td><b>Seed / random_state</b></td><td>A fixed number that makes random sampling and splitting repeatable</td></tr>
+    <tr><td><b>Bias / variance</b></td><td>Too simple (underfitting) / too sensitive to the training rows (overfitting)</td></tr>
+    <tr><td><b>Generalisation</b></td><td>Doing well on new, unseen data: the real goal</td></tr>
+  </table>
+  <h3>② Match the problem to the data</h3>
+  <table>
+    <tr><th>If your problem is…</th><th>Task type</th><th>Learning type</th><th>Data you need</th><th>Practice dataset</th></tr>
+    <tr><td>"How much?" (any value)</td><td>Regression: continuous</td><td>Supervised</td><td>Examples + number labels</td><td>House prices (Kaggle)</td></tr>
+    <tr><td>"How many?" (a count)</td><td>Regression: count</td><td>Supervised</td><td>Examples + count labels</td><td>Bike-sharing demand (UCI)</td></tr>
+    <tr><td>"Yes or no?"</td><td>Binary classification</td><td>Supervised</td><td>Examples + 2 labels</td><td>Titanic survival (Kaggle)</td></tr>
+    <tr><td>"Which one of several?"</td><td>Multiclass classification</td><td>Supervised</td><td>Examples + 1 of many labels</td><td>MNIST digits, Iris flowers</td></tr>
+    <tr><td>"Which tags apply?"</td><td>Multi-label classification</td><td>Supervised</td><td>Examples + a set of tags</td><td>Movie-genre datasets</td></tr>
+    <tr><td>"What happens next over time?"</td><td>Forecasting</td><td>Supervised</td><td>Time-stamped history</td><td>Store sales, weather</td></tr>
+    <tr><td>"Which items are similar?"</td><td>Clustering</td><td>Unsupervised</td><td>Examples, no labels</td><td>Mall customers (Kaggle)</td></tr>
+    <tr><td>"Is this unusual?"</td><td>Anomaly detection</td><td>Often unsupervised</td><td>Mostly normal examples</td><td>Credit-card fraud (Kaggle)</td></tr>
+    <tr><td>"What goes together?"</td><td>Association</td><td>Unsupervised</td><td>Baskets / transactions</td><td>Grocery basket datasets</td></tr>
+    <tr><td>"Write / answer / summarise"</td><td>Generation</td><td>GenAI (LLM)</td><td>Documents, Q&amp;A pairs, instructions</td><td>Hugging Face text datasets</td></tr>
+  </table>
+  <h3>③ Sampling and splitting rules of thumb</h3>
+  <table>
+    <tr><th>Situation</th><th>Do this</th></tr>
+    <tr><td>Always</td><td>Fix a <b>seed / random_state</b> so the split can be reproduced</td></tr>
+    <tr><td>Rare class (e.g. fraud)</td><td>Stratified split, so every set has the same share of the rare class</td></tr>
+    <tr><td>Imbalanced training data</td><td>Over- or under-sample the <b>training set only</b>, after splitting</td></tr>
+    <tr><td>Small / medium / huge dataset</td><td>60/20/20 or cross-validation / 70/15/15 or 80/10/10 / 98/1/1</td></tr>
+    <tr><td>Time-based data</td><td>Split by time (past → future), never shuffle</td></tr>
+    <tr><td>Many rows per person</td><td>Split by person, not by row</td></tr>
+  </table>
+  <h3>④ Reading train vs. test scores</h3>
+  <table>
+    <tr><th>Training</th><th>Test</th><th>Diagnosis</th><th>First thing to try</th></tr>
+    <tr><td>Low</td><td>Low</td><td>Underfitting (high bias)</td><td>More flexible model, better features</td></tr>
+    <tr><td>High</td><td>Much lower</td><td>Overfitting (high variance)</td><td>More data, simpler model, regularisation, early stopping</td></tr>
+    <tr><td>High</td><td>High, close</td><td>Good fit</td><td>Check once on the test set and ship it</td></tr>
+    <tr><td>100%</td><td>100%</td><td>Suspicious</td><td>Look for data leakage</td></tr>
+  </table>
+  <h3>⑤ Where to find datasets</h3>
+  <table>
+    <tr><th>Source</th><th>Best for</th></tr>
+    <tr><td><b>Kaggle Datasets</b></td><td>Beginner-friendly data with example notebooks</td></tr>
+    <tr><td><b>Hugging Face Datasets</b></td><td>Text, audio and image data for NLP and LLM work</td></tr>
+    <tr><td><b>UCI ML Repository</b></td><td>Classic, small, clean datasets for learning</td></tr>
+    <tr><td><b>Google Dataset Search</b></td><td>A search engine for datasets</td></tr>
+    <tr><td><b>data.gov.in</b></td><td>Indian government open data</td></tr>
+    <tr><td><b>Your organisation's data</b></td><td>Real problems, only with approval and privacy controls</td></tr>
+  </table>
+  <h3>⑥ Red flags 🚩</h3>
+  <p>No description of how the data was collected · no licence · labels you can't verify · one class almost missing · test data mixed into training · personal data without consent · data much older than the problem · a score that looks too good to be true</p>
+  <h3>⑦ Is there a standard industry cheat sheet?</h3>
+  <p>There isn't one official version. Good datasets come with documentation that answers these questions: <b>dataset cards</b> on Hugging Face, the <b>data description tab</b> on Kaggle, and the well-known <b>"Datasheets for Datasets"</b> question list. If a dataset has no documentation at all, treat that as a red flag.</p>
+</section>
+
+<!-- =============== 13. Q&A + QUIZ =============== -->
+<section id="quiz">
+  <h2>13. Common questions and quiz</h2>
+  <h3>Questions learners usually ask</h3>
+  <details class="qa"><summary>Is data science the same as AI?</summary><div class="a">No. They overlap through machine learning. Data science is about getting insights from data (including dashboards and statistics that aren't AI). AI is about making machines act smart (including rule-based systems that don't learn from data).</div></details>
+  <details class="qa"><summary>Why so many names for the same thing (feature, independent variable, predictor…)?</summary><div class="a">They come from different fields: statistics says "independent / dependent variable", ML says "feature / label", databases say "column / record". They mean the same thing.</div></details>
+  <details class="qa"><summary>Is "predicting a number" always regression?</summary><div class="a">Only if the number is an <b>amount</b>. If it's really a code or a name (PIN code, product ID), it's classification.</div></details>
+  <details class="qa"><summary>If there are no labels, how does the machine know it's right?</summary><div class="a">It doesn't, in the same way. We check that the groups are tight and well separated, and, most importantly, that people who know the business find them meaningful and useful.</div></details>
+  <details class="qa"><summary>How many clusters should we ask for?</summary><div class="a">There's no single right answer. Try a few numbers, look at how well separated the groups are, and pick the number that is clear and useful for the business.</div></details>
+  <details class="qa"><summary>Why do people always use 42 as the seed?</summary><div class="a">It's a joke from the book <i>The Hitchhiker's Guide to the Galaxy</i>. Any number works; the point is to use the same one so results can be reproduced.</div></details>
+  <details class="qa"><summary>Is a high training score good news?</summary><div class="a">Only if the validation/test score is also high and close to it. A high training score with a much lower test score is overfitting.</div></details>
+  <details class="qa"><summary>Why not use 100% of the data for training?</summary><div class="a">Then we'd have nothing unseen to check with, and couldn't tell learning apart from memorising.</div></details>
+  <details class="qa"><summary>Do we use a validation set in classic machine learning?</summary><div class="a">Yes: to compare models and pick settings, often through cross-validation. Deep learning also checks it after every epoch to decide when to stop.</div></details>
+  <details class="qa"><summary>Can I use any data I find online?</summary><div class="a">No. Check the licence, the site's terms and privacy laws. Personal data needs special care and consent.</div></details>
+  <h3>Quick quiz</h3>
+  <p class="no-print">Score: <b id="qScore">0 / 0</b></p>
+  <div id="quizBox"></div>
+  <div class="takeaway"><b>Coming up in Session 2:</b> we know the model learns <i>from</i> data. Next: <b>how</b> does it learn? We'll build a linear regression model, measure its <b>loss</b>, and see how <b>gradient descent</b> updates its <b>weights</b> step by step. You'll also meet L1 / L2 regularisation, one of the fixes for overfitting from section 10.</div>
+</section>
+<footer>AI Engineering Basics · Session 1 · What is AI? and Understanding data</footer>
+</div>
+<script>
+const PM=location.search.indexOf("print")>-1; if(PM)document.body.classList.add("pm");
+const $=id=>document.getElementById(id);
+const NS="http://www.w3.org/2000/svg";
+function el(t,a,p){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function txt(p,x,y,s,a){const t=el("text",Object.assign({x,y,"font-size":12,fill:"#374151","font-family":"Segoe UI, Arial"},a||{}),p);t.textContent=s;return t;}
+const fmt=n=>n.toLocaleString("en-IN");
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;}}
+function gaussR(r){let u=0;while(!u)u=r();const v=r();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v);}
+function axes(svg,o){const X=v=>o.L+(v-o.xmin)/(o.xmax-o.xmin)*(o.W-o.L-o.R),Y=v=>o.H-o.B-(v-o.ymin)/(o.ymax-o.ymin)*(o.H-o.T-o.B);
+ (o.yt||[]).forEach(v=>{el("line",{x1:o.L,x2:o.W-o.R,y1:Y(v),y2:Y(v),stroke:"#f1f5f9"},svg);txt(svg,o.L-6,Y(v)+4,String(v),{"text-anchor":"end","font-size":11,fill:"#6b7280"});});
+ (o.xt||[]).forEach(v=>txt(svg,X(v),o.H-o.B+15,String(v),{"text-anchor":"middle","font-size":11,fill:"#6b7280"}));
+ el("line",{x1:o.L,x2:o.W-o.R,y1:o.H-o.B,y2:o.H-o.B,stroke:"#374151","stroke-width":1.5},svg);el("line",{x1:o.L,x2:o.L,y1:o.T,y2:o.H-o.B,stroke:"#374151","stroke-width":1.5},svg);
+ txt(svg,(o.L+o.W-o.R)/2,o.H-5,o.xlab,{"text-anchor":"middle","font-size":12.5});txt(svg,14,(o.T+o.H-o.B)/2,o.ylab,{"text-anchor":"middle","font-size":12.5,transform:`rotate(-90 14 ${(o.T+o.H-o.B)/2})`});return {X,Y};}
+function mkQ(box,list,scoreId,numbered){let s=0,t=0;list.forEach((q,qi)=>{const d=document.createElement("div");d.className="quiz-q";
+ d.innerHTML=`<b>${numbered?qi+1+". ":""}${q.q}</b><div class="opts"></div><div class="exp">💡 ${q.e}</div>`;const o=d.querySelector(".opts");
+ q.o.forEach((opt,i)=>{const b=document.createElement("button");b.className="btn";b.textContent=opt;b.onclick=()=>{if(d.classList.contains("done"))return;d.classList.add("done");t++;if(i===q.a)s++;b.classList.add(i===q.a?"right":"wrong");o.children[q.a].classList.add("right");if(scoreId)$(scoreId).textContent=`${s} / ${t}`;};o.appendChild(b);});box.appendChild(d);});}
+function revealQuiz(box,list){[...box.children].forEach((d,i)=>d.querySelectorAll(".opts button")[list[i].a].click());}
+const PAL=["#2563eb","#059669","#d97706","#9333ea","#db2777"];
+
+/* ===== VENN ===== */
+const L={
+ ai:{name:"Artificial Intelligence",color:"#4f46e5",tag:"The biggest circle: the goal",def:"Any technique that makes a machine do something we would call \"intelligent\": deciding, recognising, planning, answering. AI is the <b>goal</b>, not one technique.",how:"Early AI was <b>rule-based</b>: humans wrote every IF/THEN rule by hand. Modern AI mostly <b>learns from data</b> instead (that's ML, the next circle).",analogy:"A recipe book. The machine follows rules someone else wrote down.",yes:["Rule-based chess engine","Traffic-light controller","IF/THEN medical expert system","Robot path planning"],no:["Sales dashboard (data science, not AI)"]},
+ ml:{name:"Machine Learning",color:"#0891b2",tag:"Inside AI: learning from examples",def:"Instead of writing the rules, we <b>show the machine many examples</b> and it <b>works out the rules itself</b>.",how:"Traditional programming: <b>rules + data → answers</b>.<br>Machine learning: <b>data + answers → rules</b>.<br>Three styles: <b>supervised</b> (with answers), <b>unsupervised</b> (finds groups), <b>reinforcement</b> (trial and reward).",analogy:"Teaching a child what a \"dog\" is by showing many dogs, not by giving a definition.",yes:["ML spam filter","Loan approval prediction","Customer grouping","Netflix-style recommendations"],no:["Hand-written IF/THEN rules (AI, but not ML)"]},
+ dl:{name:"Deep Learning",color:"#059669",tag:"Inside ML: many layers",def:"Machine learning using <b>neural networks with many layers</b>, loosely inspired by the brain. \"Deep\" just means <b>many layers</b>.",how:"Classic ML often needs humans to decide <i>what to look at</i>. Deep learning <b>finds the useful features itself</b>: early layers see edges, middle layers see eyes and ears, final layers say \"cat\".",analogy:"A factory assembly line. Each station adds a little more understanding.",yes:["Face unlock","Voice assistants","Google Translate","Medical image scanning"],no:["Simple loan model on a small Excel sheet (usually classic ML)"]},
+ gen:{name:"Generative AI",color:"#d97706",tag:"Inside deep learning: creates new content",def:"Deep learning models that <b>create new content</b> (text, images, code, music, video) instead of only labelling or predicting.",how:"Predictive AI answers \"<b>which one / how much?</b>\". Generative AI answers \"<b>make me one</b>\".",analogy:"A spam filter is a <b>judge</b>. Generative AI is an <b>author</b>.",yes:["DALL·E / Midjourney (images)","Music and video generators","ChatGPT, Copilot (text)"],no:["Face unlock (recognises, doesn't create)"]},
+ llm:{name:"Large Language Models (LLMs)",color:"#dc2626",tag:"Inside generative AI: models for language",def:"Very large generative models trained on huge amounts of text. At their core they do one thing: <b>predict the next word (token)</b>, again and again.",how:"They are built on the <b>Transformer</b> architecture (2017). We'll reach this later in the course.",analogy:"Super-powered autocomplete that has read a large part of the internet.",yes:["ChatGPT","Microsoft Copilot","Claude","Gemini"],no:["Midjourney (generative AI for images, not language)"]},
+ ds:{name:"Data Science",color:"#9333ea",tag:"A separate field that overlaps with AI",def:"The field of <b>getting insights and decisions from data</b> using statistics, analysis, visualisation and machine learning.",how:"It is <b>not the parent of AI</b>. It overlaps with ML and deep learning because data scientists often use them. Part of data science has nothing to do with AI, and part of AI has nothing to do with data science.",analogy:"A detective who uses data as clues: sometimes with AI tools, sometimes just a calculator and charts.",yes:["Sales dashboards","A/B test analysis","Churn prediction with ML (overlap)","Business reports"],no:["Rule-based chess engine (AI, not data science)"]}};
+const order=["ai","ml","dl","gen","llm"];let cur=-1,dsOn=true;const venn=$("venn"),info=$("info");
+function infoHTML(k){const d=L[k];return `<h3 style="color:${d.color}">${d.name}</h3><div class="tag">${d.tag}</div><p>${d.def}</p><p>${d.how}</p><div class="box analogy" style="margin:8px 0"><span class="lbl">Analogy</span>${d.analogy}</div><b>Examples</b><div class="chips">${d.yes.map(x=>`<span>✅ ${x}</span>`).join("")}</div><b style="display:block;margin-top:8px">Not an example</b><div class="chips no">${d.no.map(x=>`<span>❌ ${x}</span>`).join("")}</div>`;}
+function showInfo(k){info.style.borderColor=L[k].color;info.innerHTML=infoHTML(k);venn.classList.toggle("focus",k!=="ds");
+ venn.querySelectorAll(".layer").forEach(e=>{e.classList.remove("sel","parent");const i=order.indexOf(e.dataset.k),j=order.indexOf(k);if(e.dataset.k===k)e.classList.add("sel");else if(j>-1&&i<j)e.classList.add("parent");});
+ document.querySelectorAll("#legend button").forEach(b=>{b.style.background=b.dataset.k===k?L[k].color:"#fff";b.style.color=b.dataset.k===k?"#fff":L[b.dataset.k].color;});}
+function introInfo(){info.style.borderColor="#e5e7eb";info.innerHTML=`<h3>Start here</h3><div class="tag">Nested circles: each one is a special kind of the circle around it</div><ol><li><b style="color:#4f46e5">AI</b>: the goal: smart machines</li><li><b style="color:#0891b2">Machine learning</b>: AI that learns from data</li><li><b style="color:#059669">Deep learning</b>: ML with many layers</li><li><b style="color:#d97706">Generative AI</b>: DL that creates</li><li><b style="color:#dc2626">LLMs</b>: GenAI for language</li></ol><p><b style="color:#9333ea">Data science</b> (dashed circle) is a <b>neighbouring field</b>. It overlaps with ML and DL, but it doesn't contain AI.</p><p class="hint">Press <b>Next</b> to zoom in one level at a time.</p>`;
+ venn.classList.remove("focus");venn.querySelectorAll(".layer").forEach(e=>e.classList.remove("sel","parent"));document.querySelectorAll("#legend button").forEach(b=>{b.style.background="#fff";b.style.color=L[b.dataset.k].color;});}
+venn.querySelectorAll(".layer").forEach(e=>e.addEventListener("click",()=>{cur=order.indexOf(e.dataset.k);showInfo(e.dataset.k);}));$("dsLabel").addEventListener("click",()=>{cur=-1;showInfo("ds");});
+[...order,"ds"].forEach(k=>{const b=document.createElement("button");b.textContent=L[k].name.replace(" (LLMs)","");b.dataset.k=k;b.style.borderColor=L[k].color;b.style.color=L[k].color;b.onclick=()=>{cur=order.indexOf(k);if(k==="ds"&&!dsOn)toggleDS();showInfo(k);};$("legend").appendChild(b);});
+$("nextBtn").onclick=()=>{cur=Math.min(cur+1,order.length-1);showInfo(order[cur]);};$("prevBtn").onclick=()=>{cur=Math.max(cur-1,0);showInfo(order[cur]);};$("resetBtn").onclick=()=>{cur=-1;introInfo();};
+function toggleDS(){dsOn=!dsOn;$("dsGroup").classList.toggle("hide",!dsOn);$("dsLabel").style.pointerEvents=dsOn?"all":"none";$("dsToggle").textContent=dsOn?"Hide Data Science":"Show Data Science";}$("dsToggle").onclick=toggleDS;introInfo();
+
+/* ===== LEVELS / SORT / TIMELINE ===== */
+const lv=[["Rule-based AI","#4f46e5","A human writes rules: IF the email contains \"lottery\" → spam. <i>Problem:</i> spammers write \"l0ttery\" and the rule misses it. Someone has to keep writing rules forever."],["Machine learning","#0891b2","Give the model 100,000 emails already marked spam / not spam. It learns the patterns itself (odd senders, many links, ALL CAPS), including tricks nobody wrote a rule for."],["Deep learning","#059669","It understands the <b>meaning</b> of the whole email, so it catches cleverly worded scams that avoid obvious spam words."],["Generative AI","#d97706","It goes beyond judging emails: it <b>creates</b> things, such as a summary of your inbox or a draft reply."],["LLM","#dc2626","Copilot in Outlook: \"Summarise this thread and draft a polite reply\". It predicts the best next words, one token at a time."],["Data science","#9333ea","An analyst builds a dashboard: \"How many spam emails did we get per month, and from which countries?\" Insight from data; no AI needed."]];
+lv.forEach(x=>{const b=document.createElement("button");b.className="btn";b.textContent=x[0];b.style.borderColor=x[1];b.onclick=()=>{$("levels").querySelectorAll("button").forEach(z=>{z.style.background="";z.style.color=""});b.style.background=x[1];b.style.color="#fff";$("lvlOut").style.borderLeft=`5px solid ${x[1]}`;$("lvlOut").innerHTML=`<b style="color:${x[1]}">${x[0]}</b><br>${x[2]}`;};$("levels").appendChild(b);});$("levels").firstChild.click();
+const G=[["A 1990s chess program that follows hand-written rules","ai","Humans wrote the rules and it doesn't learn from data, so it's AI but not ML."],["A bank model that learns from past loans who is likely to repay","ml","It learns patterns from labelled past data, usually with classic ML."],["Face unlock on your phone","dl","Recognising faces from raw pixels needs many-layered neural networks."],["Midjourney drawing a picture from a sentence","gen","It creates a new image: generative AI. Not an LLM, because it makes images, not language."],["ChatGPT writing an email","llm","A large language model predicting the next words."],["A monthly sales dashboard in Power BI","ds","Insight from data with charts, and no learning model: data science, not AI."],["Netflix suggesting your next show","ml","It learns your preferences from viewing data. (Large systems may also use deep learning.)"],["Google Translate turning Kannada into English","dl","Modern translation uses deep neural networks, often Transformers."],["An A/B test report comparing two website designs","ds","Statistics on data to make a decision: data science, not AI."],["Microsoft Copilot summarising a Teams meeting","llm","It generates language, so it is an LLM."],["A thermostat: IF temperature > 26°C THEN switch on AC","ai","A simple fixed rule: the most basic kind of rule-based automation."],["Grouping customers into types with no predefined groups","ml","Unsupervised machine learning: it finds the groups itself."]];
+const gOpts=[["ai","AI (rules)"],["ml","Machine learning"],["dl","Deep learning"],["gen","Generative AI"],["llm","LLM"],["ds","Data science (not AI)"]],gName=Object.fromEntries(gOpts);
+let gi=0,gs=0,gt=0,gAns=false;const gOrder=G.map((_,i)=>i).sort(()=>Math.random()-.5);
+function gShow(){const q=G[gOrder[gi%G.length]];gAns=false;$("gCard").textContent=q[0];$("gFb").className="fb";$("gFb").innerHTML="";const c=$("gChoices");c.innerHTML="";
+ gOpts.forEach(o=>{const b=document.createElement("button");b.className="btn";b.textContent=o[1];b.style.borderColor=L[o[0]].color;b.onclick=()=>{if(gAns)return;gAns=true;gt++;const ok=o[0]===q[1];if(ok)gs++;b.style.background=ok?"#10b981":"#ef4444";b.style.color="#fff";if(!ok)[...c.children].forEach((x,ix)=>{if(gOpts[ix][0]===q[1]){x.style.background="#10b981";x.style.color="#fff";}});$("gFb").className="fb "+(ok?"ok":"bad");$("gFb").innerHTML=(ok?"✅ Correct! ":"❌ Not quite. ")+q[2];$("gScore").textContent=`${gs} / ${gt}`;};c.appendChild(b);});}
+$("gNext").onclick=()=>{gi++;gShow();};gShow();
+const T=[["1950s","The idea of \"thinking machines\" begins, and the term <b>Artificial Intelligence</b> is coined (1956)."],["1970s–80s","Rule-based <b>expert systems</b> become popular, with humans writing thousands of IF/THEN rules."],["1990s–2000s","<b>Machine learning</b> grows: spam filters, recommendations. IBM Deep Blue beats the world chess champion (1997)."],["2012","<b>Deep learning</b> breakthrough in image recognition, thanks to big data and GPUs."],["2017","The <b>Transformer</b> is invented, the architecture behind today's LLMs."],["2022 onwards","<b>ChatGPT</b> launches and generative AI and LLMs go mainstream."]];
+T.forEach(t=>{const d=document.createElement("div");d.className="tl";d.innerHTML=`<div class="dot"></div><div class="yr">${t[0]}</div>`;d.onclick=()=>{$("timeline").querySelectorAll(".tl").forEach(z=>z.classList.remove("on"));d.classList.add("on");$("tlOut").innerHTML=`<b>${t[0]}:</b> ${t[1]}`;};$("timeline").appendChild(d);});$("timeline").firstChild.click();
+
+/* ===== ANATOMY + TERMS ===== */
+const anatTxt={row:"<b>Row = one record (sample, example).</b> Here, one row is one house.",feat:"<b>Features (X) = the inputs</b>: size, bedrooms, location and age. Also called <b>independent variables</b>.",lab:"<b>Label (y) = the answer</b> we want predicted: the price. Also called the <b>target</b> or <b>dependent variable</b>."};
+document.querySelectorAll("#anatBtns button").forEach(b=>b.onclick=()=>{const t=$("anat");t.querySelectorAll("td,th").forEach(c=>c.classList.remove("hl-row","hl-feat","hl-lab"));document.querySelectorAll("#anatBtns button").forEach(z=>z.classList.remove("on"));b.classList.add("on");const a=b.dataset.a,rows=t.rows;
+ if(a==="row")[...rows[2].cells].forEach(c=>c.classList.add("hl-row"));if(a==="feat")[...rows].forEach(r=>[0,1,2,3].forEach(i=>r.cells[i].classList.add("hl-feat")));if(a==="lab")[...rows].forEach(r=>r.cells[4].classList.add("hl-lab"));$("anatOut").innerHTML=anatTxt[a];});
+const TO=["Feature (X)","Label (y)","Row"];
+const TQ=[{q:"Spam dataset: the column \"number of links in the email\"",o:TO,a:0,e:"An input the model looks at: a feature."},{q:"Spam dataset: the column \"is_spam (yes/no)\"",o:TO,a:1,e:"The answer: the label, also called the class here."},{q:"One single email with all its columns",o:TO,a:2,e:"One record / sample / row."},{q:"\"Dependent variable\" in a salary-prediction dataset",o:TO,a:1,e:"Salary depends on the inputs, so it's the target / label."},{q:"\"Predictor\" or \"independent variable\"",o:TO,a:0,e:"Other names for a feature."},{q:"\"Observation\" or \"instance\"",o:TO,a:2,e:"Other names for a row."}];
+mkQ($("termQuiz"),TQ);
+const TM={ml:"<b>Machine learning</b>: learning rules from data. Three families depending on the data.",sup:"<b>Supervised</b>: every example has the answer (label). Section 6.",unsup:"<b>Unsupervised</b>: no answers. The model finds groups or odd items itself. Section 7.",rl:"<b>Reinforcement</b>: no answer dataset. The model tries actions and learns from rewards and penalties.",reg:"<b style='color:#2563eb'>Regression</b>: the answer is a <b>number on a scale</b>. Example: house price.",cls:"<b style='color:#db2777'>Classification</b>: the answer is a <b>category</b>. Example: spam / not spam.",clu:"<b>Clustering</b>: put similar items into groups nobody defined in advance.",ano:"<b>Anomaly detection</b>: learn what \"normal\" looks like and flag anything unusual.",cont:"<b>Continuous regression</b>: any value, decimals allowed.",count:"<b>Count regression</b>: whole-number amounts, never below zero.",bin:"<b>Binary classification</b>: exactly 2 answers.",multi:"<b>Multiclass</b>: 3+ answers, pick exactly one.",ml2:"<b>Multi-label</b>: several answers can be true at once."};
+document.querySelectorAll("#tmap .node").forEach(n=>n.addEventListener("click",()=>{document.querySelectorAll("#tmap .node rect").forEach(r=>r.setAttribute("stroke-width","2"));n.querySelector("rect").setAttribute("stroke-width","4");$("tmapOut").innerHTML=TM[n.dataset.n];}));
+document.querySelectorAll("#typeTabs button").forEach(b=>b.onclick=()=>{document.querySelectorAll("#typeTabs button").forEach(z=>z.classList.remove("on"));b.classList.add("on");document.querySelectorAll("#types .tabpane").forEach(p=>p.classList.toggle("on",p.id===b.dataset.t));});
+let found=0;function mark(td){if(td.classList.contains("bad-found"))return;td.classList.add("bad-found");found++;$("messyCount").textContent=found;const li=document.createElement("li");li.textContent=td.dataset.bad;$("messyList").appendChild(li);}
+document.querySelectorAll("#messy td").forEach(td=>td.onclick=()=>{if(td.dataset.bad)mark(td);});$("messyReveal").onclick=()=>document.querySelectorAll("#messy td[data-bad]").forEach(mark);
+
+/* ===== REG vs CLS + WORKED ===== */
+const R="📈 Regression",C="🏷️ Classification";
+const RC=[{q:"Price of a used car",o:[R,C],a:0,e:"Regression: continuous."},{q:"Will this customer cancel next month? (yes / no)",o:[R,C],a:1,e:"Classification: binary."},{q:"Tomorrow's maximum temperature in Bengaluru",o:[R,C],a:0,e:"Regression: continuous."},{q:"Which language is this text in?",o:[R,C],a:1,e:"Classification: multiclass."},{q:"How many support tickets will arrive tomorrow?",o:[R,C],a:0,e:"Regression: count."},{q:"Is this tumour benign or malignant?",o:[R,C],a:1,e:"Classification: binary."},{q:"Which genres does this movie belong to? (can be several)",o:[R,C],a:1,e:"Classification: multi-label."},{q:"Food-delivery time in minutes",o:[R,C],a:0,e:"Regression: continuous."},{q:"PIN code of the customer's area",o:[R,C],a:1,e:"Trick! It's a name for a place, not an amount."},{q:"Number of units of a product sold next week",o:[R,C],a:0,e:"Regression: count."}];
+mkQ($("rcGrid"),RC,"rcScore");
+const WE=[{tab:"📈 House price",badge:"Regression: continuous",c:"#2563eb",title:"Predict the selling price of a flat in Bengaluru",out:"A price in ₹",feat:"Size, bedrooms, location, age, floor",lab:"Actual selling price",cols:["Size (sq ft)","Beds","Location","Age","Price"],rows:[["1,200","2","Whitefield","5","₹75 L"],["1,800","3","Indiranagar","10","₹1.6 Cr"],["950","2","Electronic City","2","₹52 L"]],judge:"\"On average we're off by about ₹4 L.\"",watch:"Outliers; prices change over time"},
+ {tab:"📈 Delivery time",badge:"Regression: continuous",c:"#2563eb",title:"Predict how many minutes a food delivery will take",out:"Minutes",feat:"Distance, time of day, rain, prep time",lab:"Actual delivery time",cols:["Distance (km)","Time","Raining?","Prep (min)","Minutes"],rows:[["2.1","13:10","No","12","24"],["5.8","20:45","Yes","18","51"],["3.4","16:00","No","9","29"]],judge:"\"On average our estimate is off by 4 minutes.\"",watch:"Festival days; GPS errors"},
+ {tab:"📈 Tickets tomorrow",badge:"Regression: count",c:"#2563eb",title:"Predict how many support tickets arrive tomorrow",out:"A whole number ≥ 0",feat:"Day, holiday?, release yesterday?, 7-day average",lab:"Actual ticket count",cols:["Day","Holiday?","Release yesterday?","7-day avg","Tickets"],rows:[["Mon","No","Yes","88","142"],["Sat","No","No","90","31"],["Tue","Yes","No","85","12"]],judge:"\"On average we're off by about 9 tickets.\"",watch:"Time-based data: split by date"},
+ {tab:"🏷️ Loan default",badge:"Classification: binary",c:"#db2777",title:"Will this applicant repay or default?",out:"Repay / Default",feat:"Income, loan amount, credit score, existing EMIs",lab:"What happened with past loans",cols:["Income (₹/mo)","Loan (₹)","Credit score","EMIs","Outcome"],rows:[["85,000","10 L","780","1","Repaid"],["32,000","8 L","610","3","Defaulted"],["60,000","5 L","720","0","Repaid"]],judge:"\"We catch 85 of every 100 defaulters, and wrongly reject 6 of every 100 good applicants.\"",watch:"Imbalance; bias; privacy"},
+ {tab:"🏷️ Ticket routing",badge:"Classification: multiclass",c:"#db2777",title:"Route each support ticket to the right team",out:"Exactly one of Billing / Technical / Account / Other",feat:"Ticket subject and description",lab:"The team that resolved it",cols:["Subject","Description (short)","Team"],rows:[["Charged twice","My card was debited two times…","Billing"],["App crashes","Crashes when I upload a file…","Technical"],["Change email","I want to update my login email…","Account"]],judge:"\"92% of tickets go to the right team first time.\"",watch:"Mis-routed past tickets; rare categories"},
+ {tab:"🏷️ News tags",badge:"Classification: multi-label",c:"#9333ea",title:"Tag a news article with all topics that apply",out:"Any combination of Politics / Business / Tech / Sports",feat:"Headline and text",lab:"Tags assigned by editors",cols:["Headline","Tags"],rows:[["Govt announces new AI policy for startups","Politics, Tech, Business"],["Cricket board signs ₹5,000 Cr media deal","Sports, Business"],["New smartphone launches in India","Tech"]],judge:"Per tag: how many correct tags found, how many wrong tags added.",watch:"Inconsistent tagging; rare tags"}];
+function weHTML(w){return `<div class="we" style="border-color:${w.c}"><span class="badge" style="background:${w.c}">${w.badge}</span><h3 style="margin:8px 0 4px">${w.title}</h3><dl><dt>Output</dt><dd>${w.out}</dd><dt>Features (X)</dt><dd>${w.feat}</dd><dt>Label (y)</dt><dd>${w.lab}</dd></dl><table><tr>${w.cols.map((c,i)=>`<th class="${i===w.cols.length-1?'lab':''}">${c}</th>`).join("")}</tr>${w.rows.map(r=>`<tr>${r.map((v,i)=>`<td class="${i===r.length-1?'lab':''}">${v}</td>`).join("")}</tr>`).join("")}</table><dl><dt>How we judge it</dt><dd>${w.judge}</dd><dt>🚩 Watch out for</dt><dd>${w.watch}</dd></dl></div>`;}
+WE.forEach(w=>{const b=document.createElement("button");b.textContent=w.tab;b.onclick=()=>{$("weTabs").querySelectorAll("button").forEach(z=>z.classList.remove("on"));b.classList.add("on");$("weBox").innerHTML=weHTML(w);};$("weTabs").appendChild(b);});$("weTabs").firstChild.click();
+
+/* ===== UNSUPERVISED: supervised vs unsupervised panels ===== */
+function blob(r,n,cx,cy,sx,sy){const a=[];for(let i=0;i<n;i++)a.push([cx+gaussR(r)*sx,cy+gaussR(r)*sy]);return a;}
+(function(){const r=mulberry32(5),groups=[blob(r,18,2.5,7,0.7,0.7),blob(r,18,7,7.5,0.7,0.6),blob(r,18,5,2.5,0.8,0.7)],names=["A","B","C"];
+ [["svU1",true],["svU2",false]].forEach(([id,lab])=>{const svg=$(id);const A=axes(svg,{L:36,R:10,T:14,B:36,W:400,H:300,xmin:0,xmax:10,ymin:0,ymax:10,xlab:"Feature 1",ylab:"Feature 2"});
+  if(!lab)groups.forEach(g=>{const mx=g.reduce((s,p)=>s+p[0],0)/g.length,my=g.reduce((s,p)=>s+p[1],0)/g.length;el("ellipse",{cx:A.X(mx),cy:A.Y(my),rx:62,ry:52,fill:"none",stroke:"#111827","stroke-dasharray":"6 4","stroke-width":1.5},svg);});
+  groups.forEach((g,gi)=>g.forEach(p=>el("circle",{cx:A.X(p[0]),cy:A.Y(p[1]),r:5,fill:lab?PAL[gi]:"#9ca3af",stroke:"#fff"},svg)));
+  if(lab)names.forEach((n,i)=>{el("circle",{cx:300,cy:210+i*18,r:5,fill:PAL[i]},svg);txt(svg,310,214+i*18,"label = "+n);});
+  else txt(svg,385,250,"no labels →",{"font-weight":700,"text-anchor":"end"});txt(svg,385,266,"3 groups found",{"font-weight":700,"text-anchor":"end"});});})();
+
+/* ===== K-MEANS ===== */
+const KD=(()=>{const r=mulberry32(12),a=[];const add=(n,vx,vy,sx,sy)=>{for(let i=0;i<n;i++)a.push([Math.max(0.3,Math.min(19.5,vx+gaussR(r)*sx)),Math.max(80,Math.min(2950,vy+gaussR(r)*sy))]);};
+ add(30,3,2300,1.2,260);add(30,15,650,2,190);add(30,4.5,550,1.5,180);return a;})();
+const nrm=p=>[p[0]/20,p[1]/3000];
+let km={k:3,C:null,asg:null,phase:0,it:0,done:false},kmT=null;
+function kmInit(){const k=+$("kmK").value,r=mulberry32(7+k),P=KD.map(nrm),C=[P[Math.floor(r()*P.length)]];
+ while(C.length<k){let best=-1,bi=0;P.forEach((p,i)=>{const d=Math.min(...C.map(c=>(c[0]-p[0])**2+(c[1]-p[1])**2));const s=d*(0.6+0.4*r());if(s>best){best=s;bi=i;}});C.push(P[bi]);}
+ km={k,C:C.map(c=>c.slice()),asg:null,phase:1,it:0,done:false};}
+function kmAssign(){const P=KD.map(nrm);const a=P.map(p=>{let b=0,bd=1e9;km.C.forEach((c,j)=>{const d=(c[0]-p[0])**2+(c[1]-p[1])**2;if(d<bd){bd=d;b=j;}});return b;});
+ const changed=!km.asg||a.some((v,i)=>v!==km.asg[i]);km.asg=a;return changed;}
+function kmMove(){const P=KD.map(nrm);km.C=km.C.map((c,j)=>{const m=P.filter((_,i)=>km.asg[i]===j);return m.length?[m.reduce((s,p)=>s+p[0],0)/m.length,m.reduce((s,p)=>s+p[1],0)/m.length]:c;});}
+function kmStep(){if(km.done)return;if(km.phase===0){kmInit();}else if(km.phase===1||km.phase===3){const ch=kmAssign();km.it++;if(!ch&&km.phase===3){km.done=true;}else km.phase=2;}else if(km.phase===2){kmMove();km.phase=3;}kmDraw();}
+function kmName(c){const v=c[0]*20,s=c[1]*3000;return s>1500?"Occasional big spenders":v>9?"Loyal regulars":"Casual browsers";}
+function kmDraw(){const svg=$("km");svg.innerHTML="";const A=axes(svg,{L:56,R:15,T:15,B:40,W:600,H:400,xmin:0,xmax:20,ymin:0,ymax:3000,xlab:"Visits per month",ylab:"Average spend per visit (₹)",xt:[0,5,10,15,20],yt:[0,1000,2000,3000]});
+ KD.forEach((p,i)=>el("circle",{cx:A.X(p[0]),cy:A.Y(p[1]),r:5,fill:km.asg?PAL[km.asg[i]]:"#9ca3af",opacity:.85,stroke:"#fff"},svg));
+ if(km.C)km.C.forEach((c,j)=>{const x=A.X(c[0]*20),y=A.Y(c[1]*3000);txt(svg,x,y+8,"★",{"text-anchor":"middle","font-size":30,fill:PAL[j],stroke:"#111827","stroke-width":1});
+  if(km.done&&km.k===3)txt(svg,x,y-20,kmName(c),{"text-anchor":"middle","font-weight":700,fill:"#111827","font-size":12.5,stroke:"#fff","stroke-width":3,"paint-order":"stroke"});});
+ const msg=km.phase===0?"All customers are grey: <b>no labels</b>. Press <b>Step</b> to drop the centre markers.":
+  km.done?`✅ <b>Finished after ${km.it} rounds</b>: nothing changes any more. The machine found ${km.k} groups by itself.`+(km.k===3?" We (humans) named them from what they look like.":km.k>3?" ⚠️ Notice it happily made "+km.k+" groups, even though the data really has 3.":" ⚠️ With only 2 groups, two real groups got merged."):
+  km.phase===1?"Centre markers (stars) placed, spread across the data. Next: every customer joins the <b>nearest</b> star.":
+  km.phase===2?`Round ${km.it}: every customer has joined its nearest star (coloured). Next: each star moves to the <b>middle</b> of its group.`:
+  `Round ${km.it}: the stars moved to the middle of their groups. Next: customers re-join their nearest star. Some may switch groups.`;
+ $("kmOut").innerHTML=msg;}
+$("kmStep").onclick=kmStep;$("kmRun").onclick=()=>{clearInterval(kmT);kmT=setInterval(()=>{kmStep();if(km.done)clearInterval(kmT);},450);};
+$("kmReset").onclick=()=>{clearInterval(kmT);km={k:+$("kmK").value,C:null,asg:null,phase:0,it:0,done:false};kmDraw();};$("kmK").onchange=$("kmReset").onclick;kmDraw();
+
+/* ===== GALLERY ===== */
+(function(){const r=mulberry32(99),panels=[];
+ const mk=(title,cap,fn)=>{const f=document.createElement("figure");const svg=el("svg",{viewBox:"0 0 220 160"});f.appendChild(svg);el("rect",{x:0,y:0,width:220,height:160,fill:"#fff"},svg);fn(svg);f.insertAdjacentHTML("beforeend",`<figcaption><b>${title}</b><br>${cap}</figcaption>`);$("gallery").appendChild(f);};
+ const dot=(svg,x,y,c,s)=>el("circle",{cx:x,cy:y,r:s||3.5,fill:c},svg);
+ mk("Round, well-separated","The easy case: clear, compact groups.",svg=>{[[55,50],[165,55],[110,120]].forEach((c,i)=>{for(let k=0;k<22;k++)dot(svg,c[0]+gaussR(r)*12,c[1]+gaussR(r)*12,PAL[i]);});});
+ mk("Stretched groups","Long, tilted groups that sit close together.",svg=>{[[0,0],[1,0]].forEach((_,i)=>{for(let k=0;k<35;k++){const t=gaussR(r)*38,u=gaussR(r)*5;dot(svg,110+t*0.8+(i?25:-25)+u,80-t*0.55+u*0.6,PAL[i]);}});});
+ mk("Rings and curved shapes","One group wraps around another. Some methods follow the shape instead of looking for round blobs.",svg=>{for(let k=0;k<25;k++)dot(svg,110+gaussR(r)*9,80+gaussR(r)*9,PAL[0]);for(let k=0;k<55;k++){const a=r()*2*Math.PI,rr=55+gaussR(r)*4;dot(svg,110+Math.cos(a)*rr,80+Math.sin(a)*rr*0.9,PAL[1]);}});
+ mk("Groups + noise","Some methods mark points that fit nowhere as <b>noise</b> (✕). Those are candidates for anomaly detection.",svg=>{[[65,60],[155,105]].forEach((c,i)=>{for(let k=0;k<22;k++)dot(svg,c[0]+gaussR(r)*11,c[1]+gaussR(r)*11,PAL[i]);});[[25,135],[195,25],[120,30],[30,20],[200,145]].forEach(p=>txt(svg,p[0],p[1],"✕",{"text-anchor":"middle","font-size":16,fill:"#dc2626","font-weight":700}));});
+ mk("No real groups","Evenly spread data. A method will still split it if you ask, so check the groups mean something.",svg=>{for(let k=0;k<70;k++)dot(svg,15+r()*190,12+r()*136,"#9ca3af");});
+})();
+
+/* ===== SAMPLING + SEED ===== */
+(function(){const POP=200,reds=new Set(),r0=mulberry32(7);while(reds.size<20)reds.add(Math.floor(r0()*POP));
+ for(let i=0;i<POP;i++){const d=document.createElement("span");if(reds.has(i))d.className="r";$("pop").appendChild(d);}
+ const dots=[...$("pop").children];
+ const rng=()=>$("seedOn").checked?mulberry32(+$("seedVal").value||0):Math.random;
+ function show(idx,name){dots.forEach((d,i)=>{d.classList.toggle("pick",idx.has(i));d.classList.toggle("dim",!idx.has(i));});const n=[...idx].filter(i=>reds.has(i)).length;
+  const picked=[...idx].sort((a,b)=>a-b).slice(0,6).map(i=>"#"+(i+1)).join(", ");
+  $("smpOut").innerHTML=`<b>${name}</b>${$("seedOn").checked?` <span style="color:#7c3aed">(seed ${$("seedVal").value})</span>`:" (no seed)"}: picked 20 customers, <b style="color:#dc2626">${n} fraud</b> (${n*5}%). Ideal: 2 (10%). `+(n===2?"✅ Matches the population.":n===0?"⚠️ No fraud at all: a model trained on this would never learn what fraud looks like!":"⚠️ Off from the true 10%.")+`<br><span style="font-size:13px;color:#6b7280">First picked rows: ${picked}, …</span>`;}
+ $("smpRand").onclick=()=>{const r=rng(),p=new Set();while(p.size<20)p.add(Math.floor(r()*POP));show(p,"Simple random");};
+ $("smpStrat").onclick=()=>{const r=rng(),R=[...reds],N=[...Array(POP).keys()].filter(i=>!reds.has(i)),p=new Set();while([...p].filter(i=>reds.has(i)).length<2)p.add(R[Math.floor(r()*R.length)]);while(p.size<20)p.add(N[Math.floor(r()*N.length)]);show(p,"Stratified (2 from fraud, 18 from normal)");};
+ $("smpSys").onclick=()=>{const r=rng(),st=Math.floor(r()*10),p=new Set();for(let i=st;i<POP;i+=10)p.add(i);show(p,`Systematic (every 10th, starting at #${st+1})`);};
+ $("smpReset").onclick=()=>{dots.forEach(d=>d.classList.remove("pick","dim"));$("smpOut").innerHTML="Pick a method. The ideal sample of 20 has exactly <b>2</b> red (10%).";};})();
+
+/* ===== SPLIT ===== */
+const trR=$("trR"),vaR=$("vaR");
+function upd(){let tr=+trR.value,va=+vaR.value;if(tr+va>99){va=99-tr;vaR.value=va;}const te=100-tr-va,N=+$("dsSize").value,nTr=Math.round(N*tr/100),nVa=Math.round(N*va/100),nTe=N-nTr-nVa;
+ [["sTr",tr,"📘 Train"],["sVa",va,"📝 Val"],["sTe",te,"🎓 Test"]].forEach(([id,p,t])=>{$(id).style.width=p+"%";$(id).textContent=p>=6?`${t} ${p}%`:`${p}%`;});
+ [["cTr",tr,nTr],["cVa",va,nVa],["cTe",te,nTe]].forEach(([id,p,n])=>{$(id).style.width=p+"%";$(id).textContent=fmt(n)+" rows";});$("trV").textContent=tr+"%";$("vaV").textContent=va+"%";const v=$("verdict"),small=Math.min(nVa,nTe);
+ if(small<100){v.className="verdict bad no-print";v.innerHTML=`⚠️ Only ${fmt(small)} rows to check with. The score will jump around. Use a bigger check share or cross-validation.`;}
+ else if(small<1000){v.className="verdict mid no-print";v.innerHTML=`🟡 ${fmt(small)} rows to check with: usable, but a little rough.`;}
+ else if(tr<70&&N>=100000){v.className="verdict mid no-print";v.innerHTML=`🟡 Plenty of check data (${fmt(small)} rows), so you could give more to training.`;}
+ else{v.className="verdict ok no-print";v.innerHTML=`✅ ${fmt(nTr)} rows to learn from and ${fmt(small)}+ rows each to check with. A healthy split.`;}}
+trR.oninput=upd;vaR.oninput=upd;$("dsSize").onchange=upd;document.querySelectorAll("[data-p]").forEach(b=>b.onclick=()=>{const[a,c]=b.dataset.p.split(",");trR.value=a;vaR.value=c;upd();});upd();
+
+/* ===== DARTBOARDS ===== */
+(function(){const r=mulberry32(3);const D=[["Low bias, low variance","✅ Good fit: consistently on target",0,0,6,"#10b981"],["Low bias, high variance","🔴 Overfitting: right on average, but all over the place",0,0,24,"#ef4444"],["High bias, low variance","🟡 Underfitting: consistent, but consistently wrong",32,-26,6,"#f59e0b"],["High bias, high variance","❌ Worst of both",30,-24,22,"#6b7280"]];
+ D.forEach(d=>{const f=document.createElement("figure");f.style.borderColor=d[5];const svg=el("svg",{viewBox:"0 0 160 160"});f.appendChild(svg);
+  [70,54,38,22,8].forEach((rr,i)=>el("circle",{cx:80,cy:80,r:rr,fill:i%2?"#fff":"#e0e7ff",stroke:"#94a3b8"},svg));el("circle",{cx:80,cy:80,r:8,fill:"#fca5a5"},svg);
+  for(let k=0;k<10;k++)el("circle",{cx:80+d[2]+gaussR(r)*d[4],cy:80+d[3]+gaussR(r)*d[4],r:4,fill:"#111827",stroke:"#fff"},svg);
+  f.insertAdjacentHTML("beforeend",`<figcaption><b>${d[0]}</b><br>${d[1]}</figcaption>`);$("dart").appendChild(f);});})();
+
+/* ===== COMPLEXITY DEMO ===== */
+const CX=(()=>{const r=mulberry32(21),f=x=>Math.sin(3*x),tr=[],te=[];for(let i=0;i<12;i++){const x=-1+2*(i+0.5)/12+(r()-0.5)*0.08;tr.push([x,f(x)+gaussR(r)*0.22]);}for(let i=0;i<20;i++){const x=-1+2*r();te.push([x,f(x)+gaussR(r)*0.22]);}return {tr,te,f};})();
+function cheb(x,d){const T=[1,x];for(let k=2;k<=d;k++)T.push(2*x*T[k-1]-T[k-2]);return T.slice(0,d+1);}
+function solve(A,b){const n=b.length;A=A.map((r,i)=>[...r,b[i]]);for(let c=0;c<n;c++){let p=c;for(let r=c+1;r<n;r++)if(Math.abs(A[r][c])>Math.abs(A[p][c]))p=r;[A[c],A[p]]=[A[p],A[c]];for(let r=c+1;r<n;r++){const f=A[r][c]/A[c][c];for(let k=c;k<=n;k++)A[r][k]-=f*A[c][k];}}
+ const x=Array(n).fill(0);for(let r=n-1;r>=0;r--){let s=A[r][n];for(let k=r+1;k<n;k++)s-=A[r][k]*x[k];x[r]=s/A[r][r];}return x;}
+function fit(d){const n=d+1,A=Array.from({length:n},()=>Array(n).fill(0)),b=Array(n).fill(0);CX.tr.forEach(([x,y])=>{const t=cheb(x,d);for(let i=0;i<n;i++){b[i]+=t[i]*y;for(let j=0;j<n;j++)A[i][j]+=t[i]*t[j];}});for(let i=0;i<n;i++)A[i][i]+=1e-10;const c=solve(A,b);return x=>cheb(x,d).reduce((s,t,i)=>s+t*c[i],0);}
+const mse=(p,D)=>D.reduce((s,[x,y])=>s+(p(x)-y)**2,0)/D.length;
+function cxDraw(){const d=+$("cxD").value,p=fit(d),svg=$("cx");svg.innerHTML="";const A=axes(svg,{L:44,R:15,T:15,B:40,W:600,H:360,xmin:-1,xmax:1,ymin:-2,ymax:2,xlab:"x (input)",ylab:"y (answer)",xt:[],yt:[-2,-1,0,1,2]});
+ let dd="";for(let i=0;i<=300;i++){const x=-1+2*i/300,y=Math.max(-2.3,Math.min(2.3,p(x)));dd+=(i?"L":"M")+A.X(x).toFixed(1)+" "+A.Y(y).toFixed(1);}
+ const cp=el("clipPath",{id:"cxc"},el("defs",{},svg));el("rect",{x:44,y:15,width:541,height:305},cp);
+ let tp="";for(let i=0;i<=100;i++){const x=-1+i/50;tp+=(i?"L":"M")+A.X(x)+" "+A.Y(CX.f(x));}el("path",{d:tp,fill:"none",stroke:"#10b981","stroke-width":2,"stroke-dasharray":"5 5",opacity:.7},svg);
+ el("path",{d:dd,fill:"none",stroke:"#4f46e5","stroke-width":3,"clip-path":"url(#cxc)"},svg);
+ CX.te.forEach(([x,y])=>el("circle",{cx:A.X(x),cy:A.Y(y),r:5,fill:"#fff",stroke:"#2563eb","stroke-width":2},svg));CX.tr.forEach(([x,y])=>el("circle",{cx:A.X(x),cy:A.Y(y),r:5.5,fill:"#d97706",stroke:"#fff"},svg));
+ txt(svg,60,32,"— model",{fill:"#4f46e5","font-weight":700});txt(svg,130,32,"- - true pattern",{fill:"#059669","font-weight":700});txt(svg,250,32,"● train",{fill:"#d97706","font-weight":700});txt(svg,310,32,"○ test",{fill:"#2563eb","font-weight":700});
+ const a=mse(p,CX.tr),b=mse(p,CX.te);$("cxV").textContent=d+(d===1?" (straight line)":d<=2?" (gentle curve)":d<=6?" (flexible curve)":" (very wiggly)");
+ $("cxOut").innerHTML=`Training error: <b>${a.toFixed(3)}</b><br>Test error: <b>${b.toFixed(3)}</b><br><span style="font-size:13px;color:#6b7280">Lower is better. Watch the <b>gap</b> between them.</span>`;
+ const s=$("cxStatus");if(d<=2){s.className="status st-mid";s.innerHTML="🟡 <b>Underfitting (high bias):</b> too simple to follow the curve. Both errors are high.";}
+ else if(d<=6){s.className="status st-ok";s.innerHTML="✅ <b>Good fit:</b> follows the real pattern. Both errors are low and close together: it <b>generalises</b>.";}
+ else{s.className="status st-bad";s.innerHTML="🔴 <b>Overfitting (high variance):</b> bends to hit every training dot (training error ≈ 0), so it misses the test dots. It learned the noise.";}}
+$("cxD").oninput=cxDraw;cxDraw();
+
+/* ===== OVERFIT OVER TIME ===== */
+const X0=60,X1=680,Y0=280,Y1=20,trF=t=>0.82*Math.exp(-3.4*t)+0.06,vaF=t=>0.82*Math.exp(-3.4*t)+0.14+(t>0.36?2.0*Math.pow(t-0.36,2):0),px=t=>X0+t*(X1-X0),py=e=>Y0-e*(Y0-Y1)/1.05;
+function path(f){let d="";for(let i=0;i<=100;i++){const t=i/100;d+=(i?"L":"M")+px(t).toFixed(1)+" "+py(f(t)).toFixed(1);}return d;}
+$("trainPath").setAttribute("d",path(trF));$("valPath").setAttribute("d",path(vaF));
+function ofUpd(){const t=$("ofR").value/100,x=px(t);$("ofLine").setAttribute("x1",x);$("ofLine").setAttribute("x2",x);$("ofTr").setAttribute("cx",x);$("ofTr").setAttribute("cy",py(trF(t)));$("ofVa").setAttribute("cx",x);$("ofVa").setAttribute("cy",py(vaF(t)));
+ const o=$("ofOut");if(t<0.32){o.style.borderColor="#f59e0b";o.style.background="#fffbeb";o.innerHTML="<b>🟡 Underfitting:</b> both errors are high. The model hasn't learned enough yet. Keep training.";}
+ else if(t<=0.56){o.style.borderColor="#10b981";o.style.background="#ecfdf5";o.innerHTML="<b>✅ Sweet spot:</b> validation error is at its lowest. <b>Stop here</b> (\"early stopping\").";}
+ else{o.style.borderColor="#ef4444";o.style.background="#fef2f2";o.innerHTML="<b>🔴 Overfitting:</b> training error keeps falling, but validation error goes <b>up</b>. The model is memorising.";}}
+$("ofR").oninput=ofUpd;ofUpd();
+
+/* ===== WIZARD + CHECKLIST ===== */
+const W=[{p:"Predict the selling price of a flat",o:"A price in ₹",t:"Regression: continuous · supervised",d:"Structured / tabular",f:"Size, location, bedrooms, age, floor",l:"Past selling prices",w:"Outliers; old prices in a fast-changing market"},
+ {p:"Predict whether a customer will cancel their subscription",o:"Yes / no",t:"Classification: binary · supervised",d:"Structured / tabular",f:"Months subscribed, usage, complaints, plan type",l:"Did they cancel? (past records)",w:"Imbalance: use a stratified split"},
+ {p:"Sort incoming support tickets into categories",o:"One of Billing / Login / Bug / Other",t:"Classification: multiclass · supervised",d:"Text",f:"Ticket subject and description",l:"Category agents assigned",w:"Mis-categorised tickets; private details"},
+ {p:"Find natural topics in 50,000 support tickets (no categories yet)",o:"Groups of similar tickets",t:"Clustering · unsupervised",d:"Text",f:"Ticket text",l:"None needed",w:"Humans must read and name each group; choose a sensible number of groups"},
+ {p:"Group our customers into types for marketing",o:"Groups nobody has defined yet",t:"Clustering · unsupervised",d:"Structured / tabular",f:"Visits, spend, categories, location",l:"None needed",w:"Features on very different scales; groups must make business sense"},
+ {p:"Spot unusual card transactions (no fraud labels)",o:"Normal / unusual",t:"Anomaly detection · unsupervised",d:"Structured / tabular",f:"Amount, time, location, device, merchant",l:"None (or a few confirmed cases to check with)",w:"Unusual is not always fraud: humans review the flags"},
+ {p:"Predict next month's electricity demand",o:"A number over time",t:"Regression: forecasting · supervised",d:"Time series",f:"Past usage, temperature, holidays",l:"Actual demand",w:"Split by time, never shuffle"},
+ {p:"Build a chatbot that answers questions from our HR policy",o:"Generated text",t:"Generation · generative AI (LLM)",d:"Text documents",f:"HR policy documents",l:"Usually none to start (RAG, later)",w:"Outdated policy versions; confidential content"}];
+const wizHTML=x=>`<h3 style="margin-top:0">${x.p}</h3><dl><dt>Output</dt><dd>${x.o}</dd><dt>Task and learning type</dt><dd>${x.t}</dd><dt>Data type</dt><dd>${x.d}</dd><dt>Features (X)</dt><dd>${x.f}</dd><dt>Label (y)</dt><dd>${x.l}</dd><dt>🚩 Watch out for</dt><dd>${x.w}</dd></dl>`;
+W.forEach(x=>{const b=document.createElement("button");b.innerHTML="🎯 "+x.p;b.onclick=()=>{$("wizGrid").querySelectorAll("button").forEach(z=>z.classList.remove("on"));b.classList.add("on");$("wizOut").classList.add("on");$("wizOut").innerHTML=wizHTML(x);};$("wizGrid").appendChild(b);});
+const CL=[["Relevant","Does it match my problem and where it will be used?","US house prices for an Indian property app"],["Labelled correctly","Are the answers present and trustworthy? (Or is this an unsupervised problem?)","Labels created by guessing or a buggy script"],["Large enough","Enough examples of every class, with some left for validation and test?","Only 12 examples of the class you care about most"],["Representative","Covers the situations the model will meet?","Only daytime photos for a night-time camera"],["Balanced (or handled)","Is one class hugely dominating?","99.9% 'normal' with no plan"],["Clean","Few missing, duplicate or wrong values?","Half the rows have blank key columns"],["Current","Recent enough for today?","Pre-2020 data for post-2020 behaviour"],["Legal & ethical","Allowed to use it? Private data protected?","No licence, or personal data without consent"]];
+CL.forEach(c=>{const l=document.createElement("label");l.innerHTML=`<input type="checkbox"><span><b>${c[0]}</b>: ${c[1]}<small>🚩 Red flag: ${c[2]}</small></span>`;$("checklist").appendChild(l);});
+$("checklist").addEventListener("change",()=>{const n=$("checklist").querySelectorAll("input:checked").length,bar=$("meterBar");bar.style.width=(n/8*100)+"%";bar.style.background=n<4?"#ef4444":n<7?"#f59e0b":"#10b981";$("meterTxt").textContent=`${n} / 8: `+(n<4?"not ready":n<7?"usable, but fix the gaps first":n<8?"almost there":"ready to use ✅");});
+
+/* ===== QUIZ ===== */
+const Q=[{q:"A bank writes \"IF amount > ₹5 lakh AND new device THEN block\". Is this machine learning?",o:["Yes","No"],a:1,e:"A human wrote the rule: rule-based AI, not ML."},
+ {q:"In a salary dataset, \"years of experience\" is the…",o:["Dependent variable","Independent variable"],a:1,e:"It's an input (feature). Salary is the dependent variable."},
+ {q:"Routing an email to exactly one of 5 departments is…",o:["Binary","Multiclass","Multi-label"],a:1,e:"Several options, exactly one answer."},
+ {q:"You have 1 lakh customer records and no labels. You want to find customer types. This is…",o:["Classification","Clustering"],a:1,e:"No labels + find groups = clustering (unsupervised)."},
+ {q:"You asked the machine for 5 clusters. Does that prove the data has 5 real groups?",o:["Yes","No"],a:1,e:"It always makes as many groups as you ask for. Humans must check they mean something."},
+ {q:"Your data has 2% fraud. Which sampling keeps 2% fraud in both train and test?",o:["Simple random","Stratified","Convenience"],a:1,e:"Stratified sampling keeps each group's proportion."},
+ {q:"Why fix a random seed (random_state) when splitting data?",o:["It makes the model more accurate","So the same split can be reproduced by anyone"],a:1,e:"Same seed → same 'random' sample → reproducible results."},
+ {q:"Training accuracy 98%, test accuracy 65%. Diagnosis?",o:["Underfitting","Overfitting","Good fit"],a:1,e:"Big gap between training and test = overfitting (high variance)."},
+ {q:"Training accuracy 58%, test accuracy 56%. Diagnosis?",o:["Underfitting","Overfitting","Good fit"],a:0,e:"Both low = underfitting (high bias): the model is too simple or the features are weak."},
+ {q:"Which is a fix for overfitting?",o:["Use a more complex model","Get more training data / add regularisation"],a:1,e:"More data, simpler model, regularisation or early stopping all fight overfitting."},
+ {q:"Your model scores exactly 100% on the test set. First reaction?",o:["Celebrate","Check for data leakage"],a:1,e:"Real data has noise; 100% is usually a sign that test information leaked into training."},
+ {q:"You have 10 million rows. Which split makes most sense?",o:["60/20/20","98/1/1"],a:1,e:"1% of 10 million is still 100,000 rows."}];
+mkQ($("quizBox"),Q,"qScore",true);
+
+/* ===== NAV ===== */
+const secs=[...document.querySelectorAll("section[id]")],links=[...document.querySelectorAll("nav a")];
+window.addEventListener("scroll",()=>{let id="";secs.forEach(s=>{if(scrollY>=s.offsetTop-90)id=s.id;});links.forEach(a=>a.classList.toggle("active",a.getAttribute("href")==="#"+id));});
+
+/* ===== PRINT ===== */
+if(PM){
+ $("vennAll").innerHTML=order.concat("ds").map(k=>`<div class="info" style="border-color:${L[k].color};margin:10px 0">${infoHTML(k)}</div>`).join("");
+ $("lvlAll").innerHTML="<table><tr><th>Level</th><th>How it handles the email task</th></tr>"+lv.map(x=>`<tr><td style="color:${x[1]};font-weight:700">${x[0]}</td><td>${x[2]}</td></tr>`).join("")+"</table>";
+ $("gAll").innerHTML="<table><tr><th>Example</th><th>Smallest circle</th><th>Why</th></tr>"+G.map(g=>`<tr><td>${g[0]}</td><td><b style="color:${L[g[1]].color}">${gName[g[1]]}</b></td><td>${g[2]}</td></tr>`).join("")+"</table>";
+ $("tlAll").innerHTML="<table><tr><th>When</th><th>What happened</th></tr>"+T.map(t=>`<tr><td><b>${t[0]}</b></td><td>${t[1]}</td></tr>`).join("")+"</table>";
+ $("messyReveal").click();$("seedOn").checked=true;$("smpStrat").click();
+ for(let i=0;i<40&&!km.done;i++)kmStep();
+ $("cxD").value=4;cxDraw();
+ revealQuiz($("termQuiz"),TQ);revealQuiz($("rcGrid"),RC);revealQuiz($("quizBox"),Q);
+ $("weBox").innerHTML=WE.map(weHTML).join("");$("wizAll").innerHTML=W.map(x=>`<div class="we">${wizHTML(x)}</div>`).join("");
+ document.querySelectorAll("details").forEach(d=>d.open=true);
+ const map={"✅":"✓","❌":"✗","⚠️":"!","✔":"✓"};const tw=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);let n;
+ while(n=tw.nextNode()){if(n.parentNode.closest&&n.parentNode.closest("svg"))continue;let s=n.nodeValue;for(const k in map)s=s.split(k).join(map[k]);s=s.replace(/[\u{1F000}-\u{1FFFF}\u{2600}-\u{26FF}\u{2B00}-\u{2BFF}]\uFE0F?/gu,"").replace(/\uFE0F/g,"");n.nodeValue=s;}
+}
+</script>
+</body></html>
