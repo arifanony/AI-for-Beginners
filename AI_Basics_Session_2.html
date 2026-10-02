@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Basics Session 2</title>
+<style>
+:root{--ink:#1f2937;--muted:#6b7280;--line:#e5e7eb;--soft:#f8fafc;--primary:#2563eb;--question-bg:#fffbeb;--question-border:#f59e0b}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;font-family:"Segoe UI",Roboto,Arial,sans-serif;color:var(--ink);line-height:1.6;background:#f1f5f9;font-size:15.5px}
+nav{position:sticky;top:0;z-index:50;background:#111827;display:flex;gap:2px;flex-wrap:wrap;padding:8px 12px;align-items:center}
+nav .brand{color:#fcd34d;font-weight:700;margin-right:8px}
+nav a{color:#e5e7eb;text-decoration:none;padding:4px 9px;border-radius:999px;font-size:13px}
+nav a:hover,nav a.active{background:#374151;color:#fff}
+.wrap{max-width:1080px;margin:0 auto;padding:24px 20px 80px}
+section{background:#fff;border-radius:16px;padding:26px 30px;margin:22px 0;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.part{margin:34px 0 0;padding:10px 18px;border-radius:12px;background:#111827;color:#fcd34d;font-weight:700;letter-spacing:.04em;font-size:14px;text-transform:uppercase}
+.part span{color:#d1d5db;font-weight:400;text-transform:none;letter-spacing:0;margin-left:8px}
+h1{margin:0;font-size:30px}h2{margin:0 0 6px;font-size:22px;color:var(--primary);border-bottom:2px solid #eff6ff;padding-bottom:8px;margin-top:4px}
+h3{margin:24px 0 8px;font-size:18px}h4{margin:14px 0 4px;font-size:15.5px}
+.lead{color:var(--muted);margin:0 0 14px}
+.hero{background:linear-gradient(135deg,#eef2ff,#ecfeff 60%,#fdf4ff)}
+.pill{display:inline-block;font-size:12px;font-weight:600;padding:3px 10px;border-radius:999px;background:#fff;border:1px solid var(--line);margin:10px 6px 0 0}
+.hint{font-size:13px;color:var(--muted);background:var(--soft);border:1px dashed #cbd5e1;border-radius:8px;padding:6px 10px;display:inline-block;margin:4px 0 10px}
+.btn{border:1px solid #cbd5e1;background:#fff;border-radius:8px;padding:7px 14px;cursor:pointer;font-size:14px;font-family:inherit}
+.btn:hover{background:#f1f5f9}.btn.primary{background:#111827;color:#fff;border-color:#111827}.btn.on{background:#111827;color:#fff;border-color:#111827}
+.row{display:flex;gap:22px;flex-wrap:wrap}.col{flex:1 1 300px;min-width:260px}
+.box{border-radius:10px;padding:12px 16px;margin:12px 0;border-left:5px solid}
+.analogy{background:#fefce8;border-color:#eab308}.example{background:#eff6ff;border-color:#3b82f6}.key{background:#ecfdf5;border-color:#10b981}.warn{background:#fef2f2;border-color:#ef4444}.myth{background:#fff7ed;border-color:#f97316}
+.question{background-color:var(--question-bg);border-left:5px solid var(--question-border);font-style:italic;font-weight:600;padding:14px 16px;margin:16px 0;border-radius:8px}
+.question:before{content:"Ask the class: ";font-style:normal;color:#b45309;font-size:12px;letter-spacing:.06em;text-transform:uppercase;display:block;margin-bottom:2px}
+.lbl{display:block;font-weight:700;font-size:12px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:2px}
+table{width:100%;border-collapse:collapse;font-size:14px;margin:8px 0}
+th,td{border:1px solid var(--line);padding:7px 10px;text-align:left;vertical-align:top}th{background:#f1f5f9}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}tr.hl td{background:#ecfdf5}
+th.y,td.y{background:#ecfdf5}th.p,td.p{background:#eef2ff}th.e,td.e{background:#fef2f2}th.g,td.g{background:#fff7ed}
+tr.focus td{outline:2px solid #f59e0b;outline-offset:-2px}
+tr.tot td{font-weight:700;background:#f8fafc}
+.dcap{font-size:13px;color:var(--muted);margin:-2px 0 10px}
+.dtitle{font-weight:700;margin:14px 0 2px}
+.dtitle:before{content:"📊 Dataset: "}
+.takeaway{background:#111827;color:#fff;border-radius:10px;padding:14px 18px;margin-top:18px;font-size:16px}.takeaway b{color:#fcd34d}
+.eq{font-family:Consolas,"Courier New",monospace;background:#f1f5f9;border:1px solid #cbd5e1;border-radius:10px;padding:12px 16px;margin:10px 0;font-size:16.5px;text-align:center}
+.eq small{display:block;font-family:"Segoe UI",Arial,sans-serif;font-size:13px;color:var(--muted);margin-top:4px}
+.calc{font-family:Consolas,"Courier New",monospace;background:#f8fafc;border:1px solid var(--line);border-radius:10px;padding:12px 16px;white-space:pre;font-size:14.5px;line-height:1.55;overflow:auto;margin:8px 0}
+.vflow{font-family:Consolas,"Courier New",monospace;background:#f8fafc;border:1px solid var(--line);border-radius:10px;padding:12px 16px;white-space:pre;font-size:14px;text-align:center;line-height:1.5;margin:8px 0;overflow:auto}
+.chain{border:2px solid #4f46e5;border-radius:12px;padding:14px 18px;margin:14px 0;background:#fafaff}
+details.deep{border:2px dashed #8b5cf6;background:#faf5ff;border-radius:12px;padding:10px 16px;margin:16px 0}
+details.deep>summary{cursor:pointer;font-weight:700;color:#6d28d9;list-style:none}
+details.deep>summary::-webkit-details-marker{display:none}
+details.deep>summary:before{content:"▶ ";font-size:12px}
+details.deep[open]>summary:before{content:"▼ "}
+details.deep>summary small{font-weight:400;color:#7c3aed;margin-left:6px}
+code{font-family:Consolas,"Courier New",monospace;background:#f1f5f9;padding:1px 6px;border-radius:4px;font-size:14px}
+.stepper{display:flex;gap:8px;align-items:center;margin:8px 0;flex-wrap:wrap}
+svg.chart{width:100%;height:auto;background:#fff;border:1px solid var(--line);border-radius:10px}
+input[type=range]{width:100%}
+select{font-family:inherit;font-size:14px;padding:6px 10px;border-radius:8px;border:1px solid #cbd5e1}
+label.sl{display:block;font-size:14px;margin-top:6px}
+.readout{background:var(--soft);border:1px solid var(--line);border-radius:10px;padding:10px 14px;font-size:14.5px}
+.status{border-radius:10px;padding:10px 14px;margin:8px 0;font-weight:600;border:1px solid}
+.st-ok{background:#ecfdf5;border-color:#10b981}.st-mid{background:#fffbeb;border-color:#f59e0b}.st-bad{background:#fef2f2;border-color:#ef4444}
+.diagram{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:15px;margin:25px 0;text-align:center}
+.node{background:#fff;border:2px solid var(--primary);padding:10px 20px;border-radius:6px;font-weight:600}
+.node.target{border-color:#10b981}.node.model{background:var(--primary);color:white}
+.arrow{font-size:1.5rem;color:var(--muted)}
+.bars .br{display:flex;align-items:center;gap:8px;margin:4px 0;font-size:14px}
+.bars .br .nm{width:190px;flex:none}
+.bars .br .tr{flex:1;height:22px;background:#f1f5f9;border-radius:6px;position:relative;overflow:hidden}
+.bars .br .fl{position:absolute;top:0;bottom:0;border-radius:6px;transition:all .25s}
+.bars .br .vl{width:70px;text-align:right;font-variant-numeric:tabular-nums;flex:none}
+.bt td.b0{background:#dbeafe}.bt td.b1{background:#dcfce7}.bt td.b2{background:#fef3c7}.bt td.b3{background:#fce7f3}.bt td.b4{background:#ede9fe}
+.bt td.upd{font-weight:700;color:#b91c1c;white-space:nowrap}
+.quiz-q{border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin:10px 0}
+.quiz-q .opts{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.quiz-q .opts button.right{background:#10b981;color:#fff;border-color:#10b981}
+.quiz-q .opts button.wrong{background:#ef4444;color:#fff;border-color:#ef4444}
+.quiz-q .exp{display:none;margin-top:6px;font-size:14px}.quiz-q.done .exp{display:block}
+footer{text-align:center;color:var(--muted);font-size:13px;margin-top:20px}
+</style>
+</head><body>
+<nav id="nav">
+  <span class="brand">Session 2</span>
+  <a href="#s1">1. Features</a>
+  <a href="#s3">2. Weight &amp; Bias</a>
+  <a href="#s5">3. Prediction</a>
+  <a href="#s7">4. Error &amp; Loss</a>
+  <a href="#s10">5. Gradient</a>
+  <a href="#s11">6. Learning Rate &amp; Update</a>
+  <a href="#s15">7. Real Datasets (MSE)</a>
+  <a href="#s17">8. Batches &amp; Epochs</a>
+  <a href="#s18">9. Regularisation</a>
+  <a href="#s19">10. Classification</a>
+  <a href="#s20">11. Summary &amp; Quiz</a>
+</nav>
+<div class="wrap">
+
+<section class="hero">
+  <h1>AI Engineering Basics</h1>
+  <p class="lead" style="font-size:17px;margin-top:4px"><b>Session 2:</b> How Does a Machine Learning Model Learn?</p>
+  <span class="pill">Question-led: think first, then see</span>
+  <span class="pill">Every idea shown on a small dataset</span>
+  <span class="pill">Interactive visualisations</span>
+  <span class="pill">Builds on Session 1</span>
+  <div class="box key" style="margin-top:14px"><span class="lbl">The whole story in one line</span>
+  The model makes a <b>prediction</b>, measures how wrong it is (<b>loss</b>), works out which way to change its weight (<b>gradient</b>), takes a step of a controlled size (<b>learning rate</b>), and <b>repeats</b>.</div>
+  <div class="box example"><span class="lbl">How to read this page</span>
+  <b>Yellow boxes</b> are questions to ask the class before revealing the answer. <b>📊 Dataset</b> tables show every idea on real-looking rows. <b>Purple dashed boxes</b> are <b>optional</b> deep dives for anyone who wants the maths; you can skip them without losing the story.</div>
+</section>
+
+<div class="part">Part 1 <span>From features to a prediction</span></div>
+
+<!-- 1 -->
+<section id="s1">
+  <h2>1. What We Already Know</h2>
+  <p>From the previous session, we know what features and labels are. Here is a small dataset for salary prediction:</p>
+  <div class="dtitle">Employee salaries</div>
+  <table>
+    <tr><th>Years of Experience</th><th>Education</th><th>Job Role</th><th>Location</th><th class="y">Salary (target)</th></tr>
+    <tr><td>2</td><td>Bachelor</td><td>Analyst</td><td>Chennai</td><td class="y">5 LPA</td></tr>
+    <tr><td>5</td><td>Master</td><td>Engineer</td><td>Bangalore</td><td class="y">10 LPA</td></tr>
+    <tr><td>8</td><td>Master</td><td>Manager</td><td>Mumbai</td><td class="y">18 LPA</td></tr>
+    <tr><td>3</td><td>Bachelor</td><td>Developer</td><td>Chennai</td><td class="y">7 LPA</td></tr>
+  </table>
+  <p class="dcap">Illustrative numbers. Each row is one <b>record</b>.</p>
+  <p>The first four columns are our <b>features, or X</b>. Salary is our <b>target, or y</b>: the actual value we want to predict.</p>
+  <div class="question">If I give these features to a machine learning model, what do we want the model to do?</div>
+  <p>We want it to predict the salary.</p>
+  <div class="diagram">
+    <div class="node">Features (X)</div><div class="arrow">→</div>
+    <div class="node model">Model</div><div class="arrow">→</div>
+    <div class="node target">Predicted salary (ŷ)</div>
+  </div>
+  <table>
+    <tr><th style="width:18%">Symbol</th><th>Meaning</th><th>In the table</th></tr>
+    <tr><td><b>X</b></td><td>Features (inputs, independent variables)</td><td>Experience, education, role, location</td></tr>
+    <tr><td><b>y</b></td><td>Actual value (target, label). Comes from the data, never changes.</td><td>Salary column</td></tr>
+    <tr><td><b>ŷ</b> ("y-hat")</td><td>The model's <b>prediction</b></td><td>Not in the data: the model produces it</td></tr>
+  </table>
+</section>
+
+<!-- 2 -->
+<section id="s2">
+  <h2>2. We Have Features, So How Do We Get a Prediction?</h2>
+  <p>Take one employee from the table: <b>Experience = 5, Education = Master, Job Role = Engineer, Location = Bangalore</b>.</p>
+  <div class="question">Based on these features, the model needs to produce a salary. But how does it decide what number to produce?</div>
+  <p>The model needs some way to decide <b>how much each feature contributes</b> to the final prediction.</p>
+</section>
+
+<!-- 3 -->
+<section id="s3">
+  <h2>3. What Is a Weight?</h2>
+  <div class="question">Do you think all these features should have exactly the same influence on salary?</div>
+  <p>Clearly not. This is where <b>weights</b> come in. A weight is a number that decides <b>how strongly a feature affects the prediction</b>.</p>
+  <div class="calc">Experience ──→ w₁ ──┐
+Education ───→ w₂ ──┤
+Job Role ────→ w₃ ──┼──→ Prediction
+Location ────→ w₄ ──┘</div>
+  <table>
+    <tr><th>If the weight is…</th><th>Meaning</th><th>Salary example</th></tr>
+    <tr><td><b>Large positive</b></td><td>Feature pushes the prediction up strongly</td><td>Each extra year of experience adds a lot</td></tr>
+    <tr><td><b>Small</b></td><td>Feature barely matters</td><td>Something unrelated, like an employee ID</td></tr>
+    <tr><td><b>Negative</b></td><td>Feature pushes the prediction down</td><td>e.g. number of months away from work</td></tr>
+  </table>
+  <div class="box key"><span class="lbl">Learned parameter</span>The model doesn't know in advance which feature is important. During training, it <b>learns</b> the weight values from the data. That learning is what this whole session is about.</div>
+</section>
+
+<!-- 4 -->
+<section id="s4">
+  <h2>4. But Is a Weight Enough?</h2>
+  <p>Suppose Experience = 5 and its weight = 2. The contribution is 5 × 2 = 10. Now think about a fresher: Experience = <b>0</b>. Contribution = 0 × 2 = <b>0</b>.</p>
+  <div class="question">Does a fresher with 0 years of experience earn a salary of 0? What's missing?</div>
+  <p>No: there is always a <b>starting salary</b>. The features × weights alone can't produce it. So we add one more number, the <b>bias</b>: a constant that is added to every prediction. It's the prediction when all features are 0.</p>
+  <div class="eq">ŷ = wx + b<small>w → weight · x → feature · b → bias (intercept) · ŷ → prediction</small></div>
+  <table>
+    <tr><th style="width:18%"></th><th>Weight w</th><th>Bias b</th></tr>
+    <tr><td><b>Job</b></td><td>Controls the <b>slope</b>: how much ŷ changes per unit of x</td><td>Controls the <b>starting point</b>: moves the whole line up or down</td></tr>
+    <tr><td><b>Depends on x?</b></td><td>Yes: its effect is w × x</td><td>No: same constant for every record</td></tr>
+    <tr><td><b>When x = 0</b></td><td>Contributes nothing</td><td>ŷ = b</td></tr>
+    <tr><td><b>Salary example</b></td><td>Extra salary per year of experience</td><td>Starting salary for a fresher</td></tr>
+  </table>
+  <p>You may remember <code>y = mx + c</code> from school: m is our weight, c is our bias.</p>
+  <h3>See it: what the weight does vs. what the bias does</h3>
+  <span class="hint">👆 Move each slider. The dashed grey line is the starting line (w = 8, b = 10), so you can compare.</span>
+  <div class="row">
+    <div class="col">
+      <b style="color:#4f46e5">Change the weight w → the line ROTATES (slope changes)</b>
+      <svg class="chart" id="wbW" viewBox="0 0 420 300"></svg>
+      <label class="sl">Weight w = <b id="wbWV"></b> (bias fixed at b = 10)</label><input type="range" id="wbWs" min="0" max="15" step="0.5" value="12">
+    </div>
+    <div class="col">
+      <b style="color:#9333ea">Change the bias b → the line SHIFTS up or down (same slope)</b>
+      <svg class="chart" id="wbB" viewBox="0 0 420 300"></svg>
+      <label class="sl">Bias b = <b id="wbBV"></b> (weight fixed at w = 8)</label><input type="range" id="wbBs" min="0" max="40" step="2" value="26">
+    </div>
+  </div>
+  <div class="box myth"><span class="lbl">For the rest of this session</span>We keep the bias <b>fixed at b = 10</b> and focus on how the <b>weight</b> is learned. The bias is learned in a similar way; we'll cover it later.</div>
+</section>
+
+<!-- 5 -->
+<section id="s5">
+  <h2>5. Let's Actually Make a Prediction</h2>
+  <p>From here on we switch to a simpler problem with <b>one feature</b>: predicting a student's exam marks from the hours they studied.</p>
+  <div class="dtitle">Students' exam marks</div>
+  <table id="dsMarks">
+    <tr><th>Student</th><th class="num">Hours studied (x)</th><th class="num y">Actual marks (y)</th></tr>
+    <tr><td>Asha</td><td class="num">2</td><td class="num y">30</td></tr>
+    <tr><td>Bala</td><td class="num">4</td><td class="num y">50</td></tr>
+    <tr class="focus"><td><b>Chitra</b></td><td class="num"><b>5</b></td><td class="num y"><b>60</b></td></tr>
+    <tr><td>Dev</td><td class="num">6</td><td class="num y">70</td></tr>
+    <tr><td>Esha</td><td class="num">8</td><td class="num y">90</td></tr>
+  </table>
+  <p class="dcap">A small, tidy dataset so the numbers stay easy. We'll start with one student, <b>Chitra</b> (highlighted), and use all five later.</p>
+  <p>The model starts with a guess: <b>weight w = 8</b>, <b>bias b = 10</b>.</p>
+  <div class="calc">Hours studied (x) = 5
+Weight (w)        = 8
+Bias (b)          = 10
+
+Prediction ŷ = w × x + b
+             = 8 × 5 + 10
+             = 50</div>
+  <div class="question">The model predicted 50 marks for Chitra. Is that a good prediction?</div>
+  <p>We can't tell yet: we need to compare it with something.</p>
+</section>
+
+<!-- 6 -->
+<section id="s6">
+  <h2>6. Actual Value vs. Prediction</h2>
+  <p>We look up Chitra's row: <b>Actual marks y = 60</b>. The actual value comes from the data and is fixed: the model can't change it.</p>
+  <div class="question">Now can we tell whether the prediction was good or bad?</div>
+  <p>Yes. Because we have the actual value, we can compare what the model predicted with what really happened. Here it is for every student, with w = 8 and b = 10:</p>
+  <table>
+    <tr><th>Student</th><th class="num">x</th><th class="num p">Prediction ŷ = 8x + 10</th><th class="num y">Actual y</th><th>Verdict</th></tr>
+    <tr><td>Asha</td><td class="num">2</td><td class="num p">26</td><td class="num y">30</td><td>Too low</td></tr>
+    <tr><td>Bala</td><td class="num">4</td><td class="num p">42</td><td class="num y">50</td><td>Too low</td></tr>
+    <tr class="focus"><td><b>Chitra</b></td><td class="num">5</td><td class="num p">50</td><td class="num y">60</td><td>Too low</td></tr>
+    <tr><td>Dev</td><td class="num">6</td><td class="num p">58</td><td class="num y">70</td><td>Too low</td></tr>
+    <tr><td>Esha</td><td class="num">8</td><td class="num p">74</td><td class="num y">90</td><td>Too low</td></tr>
+  </table>
+  <p>The model predicts too low for everyone: a sign that the weight is too small.</p>
+</section>
+
+<div class="part">Part 2 <span>How wrong is the model?</span></div>
+
+<!-- 7 -->
+<section id="s7">
+  <h2>7. What Is Error?</h2>
+  <div class="question">How far away was our prediction from the actual answer?</div>
+  <div class="eq">Error = Prediction − Actual = ŷ − y<small>Chitra: 50 − 60 = −10</small></div>
+  <table>
+    <tr><th>Sign of the error</th><th>Meaning</th></tr>
+    <tr><td><b>Negative</b></td><td>Prediction was <b>too low</b></td></tr>
+    <tr><td><b>Positive</b></td><td>Prediction was <b>too high</b></td></tr>
+    <tr><td><b>Zero</b></td><td>Prediction was exactly right</td></tr>
+  </table>
+  <table>
+    <tr><th>Student</th><th class="num p">ŷ</th><th class="num y">y</th><th class="num e">Error ŷ − y</th></tr>
+    <tr><td>Asha</td><td class="num p">26</td><td class="num y">30</td><td class="num e">−4</td></tr>
+    <tr><td>Bala</td><td class="num p">42</td><td class="num y">50</td><td class="num e">−8</td></tr>
+    <tr class="focus"><td><b>Chitra</b></td><td class="num p">50</td><td class="num y">60</td><td class="num e"><b>−10</b></td></tr>
+    <tr><td>Dev</td><td class="num p">58</td><td class="num y">70</td><td class="num e">−12</td></tr>
+    <tr><td>Esha</td><td class="num p">74</td><td class="num y">90</td><td class="num e">−16</td></tr>
+  </table>
+</section>
+
+<!-- 8 -->
+<section id="s8">
+  <h2>8. Error Is Not Enough</h2>
+  <p>Here's a different model on three other students:</p>
+  <table>
+    <tr><th>Student</th><th class="num p">Prediction ŷ</th><th class="num y">Actual y</th><th class="num e">Error</th></tr>
+    <tr><td>Farah</td><td class="num p">40</td><td class="num y">50</td><td class="num e">−10</td></tr>
+    <tr><td>Gopi</td><td class="num p">65</td><td class="num y">60</td><td class="num e">+5</td></tr>
+    <tr><td>Hari</td><td class="num p">85</td><td class="num y">80</td><td class="num e">+5</td></tr>
+    <tr class="tot"><td colspan="3">Sum of errors</td><td class="num">0</td></tr>
+  </table>
+  <div class="question">If I simply add these errors, I get 0. Does that mean the model is perfect?</div>
+  <p>No! It missed every student. The positive and negative errors <b>cancelled out</b>. We need a better way to measure how wrong the model is.</p>
+</section>
+
+<!-- 9 -->
+<section id="s9">
+  <h2>9. What Is Loss?</h2>
+  <p><b>Loss</b> is a single number that measures how wrong the model is. For regression, we <b>square</b> the error:</p>
+  <div class="eq">Loss L = (ŷ − y)²<small>Chitra: (50 − 60)² = (−10)² = 100</small></div>
+  <table>
+    <tr><th>Student</th><th class="num e">Error</th><th class="num">Squared error</th></tr>
+    <tr><td>Farah</td><td class="num e">−10</td><td class="num">100</td></tr>
+    <tr><td>Gopi</td><td class="num e">+5</td><td class="num">25</td></tr>
+    <tr><td>Hari</td><td class="num e">+5</td><td class="num">25</td></tr>
+    <tr class="tot"><td colspan="2">Sum</td><td class="num">150 (not 0 any more ✓)</td></tr>
+  </table>
+  <div class="row">
+    <div class="col"><div class="box key" style="margin:0"><span class="lbl">Why square? Reason 1</span>Squares are never negative, so errors can't cancel each other out.</div></div>
+    <div class="col"><div class="box key" style="margin:0"><span class="lbl">Why square? Reason 2</span>Big mistakes are punished more: an error of 2 costs 4, an error of 10 costs 100.</div></div>
+  </div>
+  <p style="margin-top:12px"><b>Smaller loss</b> → the prediction is closer. <b>Larger loss</b> → further away. Our goal: make the loss as small as possible.</p>
+  <h3>The loss curve: a valley</h3>
+  <p>For Chitra (x = 5, y = 60, b = 10), let's try different weights and record the loss:</p>
+  <table>
+    <tr><th class="num">Weight w</th><th class="num">6</th><th class="num">8</th><th class="num">9</th><th class="num">10</th><th class="num">11</th><th class="num">12</th><th class="num">14</th></tr>
+    <tr><td>Prediction 5w + 10</td><td class="num">40</td><td class="num">50</td><td class="num">55</td><td class="num">60</td><td class="num">65</td><td class="num">70</td><td class="num">80</td></tr>
+    <tr><td><b>Loss</b></td><td class="num">400</td><td class="num">100</td><td class="num">25</td><td class="num"><b>0</b></td><td class="num">25</td><td class="num">100</td><td class="num">400</td></tr>
+  </table>
+  <p>Plot those points and you get a <b>U-shaped valley</b>. The bottom (w = 10) is the perfect weight.</p>
+  <svg class="chart" id="valley" viewBox="0 0 560 250"></svg>
+  <div class="question">Now we know the model is wrong. But how does the model know what it needs to change?</div>
+</section>
+
+<div class="part">Part 3 <span>Learning: gradient, learning rate, update</span></div>
+
+<!-- 10 -->
+<section id="s10">
+  <h2>10. The Model Needs a Direction: the Gradient</h2>
+  <p>Imagine standing on a hillside in thick fog. Your goal is the lowest point, but you can't see it. All you can do is <b>feel the slope under your feet</b> and ask: <i>"From where I'm standing, which way is downhill?"</i></p>
+  <table>
+    <tr><th>Hill picture</th><th>In the model</th></tr>
+    <tr><td>Where you are standing</td><td>The current weight (w = 8)</td></tr>
+    <tr><td>Your height</td><td>The loss (100)</td></tr>
+    <tr><td>The slope under your feet</td><td>The <b>gradient</b></td></tr>
+    <tr><td>The bottom of the valley</td><td>The best weight (w = 10, loss 0)</td></tr>
+  </table>
+
+  <h3>How is the gradient calculated?</h3>
+  <p>The gradient is calculated <b>from the loss, with respect to the weight</b>. It answers one question:</p>
+  <div class="eq">Gradient = how much the loss changes when the weight changes a little<small>Written ∂L/∂w and read as "the derivative of the loss with respect to the weight"</small></div>
+  <p>We can see it with a simple experiment on Chitra's record: <b>nudge the weight a tiny bit and watch the loss.</b></p>
+  <table>
+    <tr><th>Try</th><th class="num">Weight w</th><th class="num p">Prediction 5w + 10</th><th class="num e">Error</th><th class="num">Loss</th></tr>
+    <tr><td>Now</td><td class="num">8.00</td><td class="num p">50.00</td><td class="num e">−10.00</td><td class="num">100.0000</td></tr>
+    <tr><td>Nudge w up by 0.01</td><td class="num">8.01</td><td class="num p">50.05</td><td class="num e">−9.95</td><td class="num">99.0025</td></tr>
+    <tr class="tot"><td colspan="4">Change in loss for a 0.01 change in weight</td><td class="num">−0.9975</td></tr>
+  </table>
+  <div class="calc">Gradient ≈ change in loss ÷ change in weight
+         = −0.9975 ÷ 0.01
+         ≈ −100</div>
+  <p>So at w = 8, the gradient is about <b>−100</b>: increasing the weight makes the loss go <b>down</b>, quite steeply.</p>
+
+  <h3>How to read the gradient</h3>
+  <table>
+    <tr><th>Gradient is…</th><th>Meaning</th><th>So we…</th></tr>
+    <tr><td><b>Negative</b></td><td>Increasing w <b>lowers</b> the loss</td><td><b>Increase</b> the weight</td></tr>
+    <tr><td><b>Positive</b></td><td>Increasing w <b>raises</b> the loss</td><td><b>Decrease</b> the weight</td></tr>
+    <tr><td><b>Close to 0</b></td><td>Flat ground: we're at (or near) the bottom</td><td><b>Stop</b>: this is the best weight</td></tr>
+    <tr><td><b>Large (either sign)</b></td><td>Steep: far from the bottom</td><td>Expect a bigger correction</td></tr>
+  </table>
+  <div class="box warn"><span class="lbl">The gradient is not the new weight</span>−100 doesn't mean the weight becomes −100. It is the <b>slope</b> at w = 8. It tells us <b>which direction</b> to move and <b>how steep</b> the hill is.</div>
+
+  <h3>See it: the gradient as a slope</h3>
+  <span class="hint">👆 Move the weight. The orange line is the slope (gradient) at that point; the green arrow points downhill.</span>
+  <div class="row">
+    <div class="col" style="flex:1.4 1 420px"><svg class="chart" id="ndChart" viewBox="0 0 560 300"></svg></div>
+    <div class="col">
+      <label class="sl">Weight w = <b id="ndWV"></b></label><input type="range" id="ndW" min="6" max="14" step="0.1" value="8">
+      <div class="readout" id="ndOut" style="margin-top:8px"></div>
+      <div class="status" id="ndStatus"></div>
+    </div>
+  </div>
+
+  <details class="deep"><summary>Optional: how the gradient is calculated exactly <small>(for anyone who wants the maths, not needed to follow the course)</small></summary>
+    <p>The nudge experiment gives an <b>approximate</b> gradient. Calculus gives the <b>exact</b> value instantly, using the <b>chain rule</b>.</p>
+    <h4>Why a chain?</h4>
+    <p>The loss L = (ŷ − y)² doesn't contain w directly. The weight affects the loss only <b>through the prediction</b>:</p>
+    <div class="vflow">w  ──changes──▶  ŷ  ──changes──▶  L</div>
+    <div class="eq">∂L/∂w = ∂L/∂ŷ × ∂ŷ/∂w<small>(how the loss reacts to the prediction) × (how the prediction reacts to the weight)</small></div>
+    <p>Note: it's <b>ŷ</b> (the prediction), not <b>y</b> (the actual value). y comes from the data and never changes when w changes.</p>
+    <h4>Link 1: how the loss reacts to the prediction</h4>
+    <div class="calc">L = (ŷ − y)²
+Rule: the derivative of (something)² is 2 × (something)
+
+∂L/∂ŷ = 2(ŷ − y)
+      = 2(50 − 60)
+      = −20</div>
+    <h4>Link 2: how the prediction reacts to the weight</h4>
+    <div class="calc">ŷ = wx + b
+
+∂ŷ/∂w = x × (∂w/∂w) + 0     ← b is a constant, so it disappears
+      = x × 1
+      = x
+      = 5</div>
+    <h4>Join the links</h4>
+    <div class="calc">∂L/∂w = ∂L/∂ŷ × ∂ŷ/∂w
+      = 2(ŷ − y) × x
+      = (−20) × 5
+      = −100                      ✓ matches the nudge experiment</div>
+    <div class="box key"><span class="lbl">The formula for our model</span><b>Gradient = 2 × error × x</b>. In words: "how wrong we were" × "how much this weight was involved". If x were 0, the weight played no part in the prediction, so its gradient would be 0. Libraries like PyTorch do this calculation automatically for millions of weights.</div>
+  </details>
+
+  <div class="takeaway"><b>Takeaway:</b> The gradient is calculated from the <b>loss with respect to the weight</b>: how much the loss changes when the weight changes a little. <b>Negative → increase w. Positive → decrease w. Near 0 → stop.</b></div>
+</section>
+
+<!-- 11 -->
+<section id="s11">
+  <h2>11. But How Big Should the Step Be?</h2>
+  <div class="question">Suppose you know which direction is downhill. Should you take a tiny step or a huge jump?</div>
+  <p>The gradient is only the slope <b>right where you're standing</b>. If you jump too far, you can land on the other side of the valley, even higher than before.</p>
+  <p>So we multiply the gradient by a small number called the <b>learning rate (η, "eta")</b>. It controls <b>how big each step is</b>.</p>
+  <table>
+    <tr><th>Learning rate</th><th>Effect</th><th>Hill picture</th></tr>
+    <tr><td><b>Too small</b></td><td>Right direction, but very slow</td><td>Baby steps downhill</td></tr>
+    <tr><td><b>Good</b></td><td>Reaches the bottom in a few steps</td><td>Steady, confident steps</td></tr>
+    <tr><td><b>Too big</b></td><td>Overshoots; can make the loss explode</td><td>Leaping over the valley onto the other hill</td></tr>
+  </table>
+  <div class="box myth"><span class="lbl">Who chooses it?</span>The learning rate is a <b>hyperparameter</b>: <b>we</b> choose it before training (the model doesn't learn it). Teams usually try a few values and keep the one with the best validation loss.</div>
+</section>
+
+<!-- 12 -->
+<section id="s12">
+  <h2>12. Updating the Weight</h2>
+  <div class="eq">New weight = Old weight − (Learning rate × Gradient)<small>w_new = w_old − η × ∂L/∂w</small></div>
+  <div class="calc">Current weight  = 8
+Gradient        = −100
+Learning rate   = 0.01
+
+New weight = 8 − (0.01 × −100)
+           = 8 − (−1)
+           = 8 + 1
+           = 9</div>
+  <div class="question">Why is there a minus sign in the rule?</div>
+  <p>The gradient points <b>uphill</b> (the direction that makes the loss bigger). We want to go <b>downhill</b>, so we move the opposite way:</p>
+  <table>
+    <tr><th>Gradient</th><th>− η × gradient</th><th>Weight goes…</th></tr>
+    <tr><td>Negative (−100)</td><td>− 0.01 × (−100) = <b>+1</b></td><td><b>Up</b> ✓</td></tr>
+    <tr><td>Positive (e.g. +100)</td><td>− 0.01 × (+100) = <b>−1</b></td><td><b>Down</b> ✓</td></tr>
+  </table>
+  <p>Nobody picked 9 by hand: the rule produced it from the current weight, the gradient and the learning rate.</p>
+</section>
+
+<!-- 13 -->
+<section id="s13">
+  <h2>13. Did the Update Actually Help?</h2>
+  <div class="row">
+    <div class="col"><b>BEFORE</b><div class="calc">Weight     = 8
+Prediction = 8 × 5 + 10 = 50
+Loss       = (50 − 60)² = 100</div></div>
+    <div class="col"><b>AFTER ONE UPDATE</b><div class="calc">Weight     = 9
+Prediction = 9 × 5 + 10 = 55
+Loss       = (55 − 60)² = 25</div></div>
+  </div>
+  <div class="question">Did the model improve?</div>
+  <p>Yes! The loss dropped from <b>100 to 25</b>. The prediction moved from 50 to 55, closer to the actual 60.</p>
+  <h3>Try it: watch the model learn</h3>
+  <span class="hint">👆 Pick a learning rate, then press <b>Step</b> (one update) or <b>Run</b>. Same example: Chitra, x = 5, y = 60, start w = 8.</span>
+  <div class="row">
+    <div class="col" style="flex:1.5 1 440px"><svg class="chart" id="pg" viewBox="0 0 580 330"></svg></div>
+    <div class="col">
+      <div class="stepper"><button class="btn" data-lr="0.002">0.002 (tiny)</button><button class="btn" data-lr="0.01">0.01 (good)</button><button class="btn" data-lr="0.03">0.03 (big)</button><button class="btn" data-lr="0.042">0.042 (too big)</button></div>
+      <label class="sl">Learning rate η = <b id="pgLrV"></b></label><input type="range" id="pgLr" min="0.001" max="0.045" step="0.001" value="0.01">
+      <div class="stepper"><button class="btn primary" id="pgStep">Step ▶</button><button class="btn" id="pgRun">Run ▶▶</button><button class="btn" id="pgReset">Reset</button></div>
+      <div class="readout" id="pgOut"></div>
+      <div class="status" id="pgStatus"></div>
+    </div>
+  </div>
+</section>
+
+<!-- 14 -->
+<section id="s14">
+  <h2>14. Repeat the Process</h2>
+  <p>One update is not enough. After each update, the model makes a <b>new prediction</b>, calculates a <b>new loss</b> and a <b>new gradient</b> at the new weight, then updates again.</p>
+  <div class="dtitle">Training log for Chitra (η = 0.01)</div>
+  <table>
+    <tr><th class="num">Step</th><th class="num">Weight w</th><th class="num p">Prediction</th><th class="num e">Error</th><th class="num">Loss</th><th class="num g">Gradient</th><th class="num">New weight</th></tr>
+    <tr><td class="num">1</td><td class="num">8</td><td class="num p">50</td><td class="num e">−10</td><td class="num">100</td><td class="num g">−100</td><td class="num"><b>9</b></td></tr>
+    <tr><td class="num">2</td><td class="num">9</td><td class="num p">55</td><td class="num e">−5</td><td class="num">25</td><td class="num g">−50</td><td class="num"><b>9.5</b></td></tr>
+    <tr><td class="num">3</td><td class="num">9.5</td><td class="num p">57.5</td><td class="num e">−2.5</td><td class="num">6.25</td><td class="num g">−25</td><td class="num"><b>9.75</b></td></tr>
+    <tr><td class="num">4</td><td class="num">9.75</td><td class="num p">58.75</td><td class="num e">−1.25</td><td class="num">1.5625</td><td class="num g">−12.5</td><td class="num"><b>9.875</b></td></tr>
+    <tr><td class="num">5</td><td class="num">9.875</td><td class="num p">59.375</td><td class="num e">−0.625</td><td class="num">0.39</td><td class="num g">−6.25</td><td class="num"><b>9.9375</b></td></tr>
+  </table>
+  <div class="box key"><span class="lbl">Notice</span>
+  • The loss falls every step: 100 → 25 → 6.25 → 1.56 → 0.39.<br>
+  • The gradient shrinks towards 0 as we approach the bottom, so the <b>steps get smaller by themselves</b> (+1, +0.5, +0.25…). Nobody told the model to slow down.<br>
+  • The weight approaches <b>10</b>, the bottom of the valley.</div>
+  <div class="vflow">Prediction → Loss → Gradient → Update → Repeat</div>
+  <p>Repeatedly updating the weights in the direction that reduces the loss is called <b>gradient descent</b>.</p>
+</section>
+
+<div class="part">Part 4 <span>From one record to a real dataset</span></div>
+
+<!-- 15 -->
+<section id="s15">
+  <h2>15. What About a Real Dataset? Mean Squared Error (MSE)</h2>
+  <p>So far we learned from <b>one</b> student. A real dataset has thousands of records. One weight has to work well for <b>all</b> of them.</p>
+  <div class="question">With 5 students, we have 5 losses. How do we turn them into one number?</div>
+  <p>We take the <b>average</b> of the squared errors. That is the <b>Mean Squared Error (MSE)</b>:</p>
+  <div class="eq">MSE = (1/N) × Σ (ŷᵢ − yᵢ)²<small>N = number of records · Σ = add up for every record · i = the record number</small></div>
+  <p>In words: <b>square each record's error, add them all up, divide by the number of records.</b></p>
+
+  <h3>Step 1: loss for the whole dataset (w = 8, b = 10)</h3>
+  <table>
+    <tr><th>Student</th><th class="num">x</th><th class="num y">y</th><th class="num p">ŷ = 8x + 10</th><th class="num e">Error</th><th class="num">Squared error</th></tr>
+    <tr><td>Asha</td><td class="num">2</td><td class="num y">30</td><td class="num p">26</td><td class="num e">−4</td><td class="num">16</td></tr>
+    <tr><td>Bala</td><td class="num">4</td><td class="num y">50</td><td class="num p">42</td><td class="num e">−8</td><td class="num">64</td></tr>
+    <tr><td>Chitra</td><td class="num">5</td><td class="num y">60</td><td class="num p">50</td><td class="num e">−10</td><td class="num">100</td></tr>
+    <tr><td>Dev</td><td class="num">6</td><td class="num y">70</td><td class="num p">58</td><td class="num e">−12</td><td class="num">144</td></tr>
+    <tr><td>Esha</td><td class="num">8</td><td class="num y">90</td><td class="num p">74</td><td class="num e">−16</td><td class="num">256</td></tr>
+    <tr class="tot"><td colspan="5">MSE = (16 + 64 + 100 + 144 + 256) ÷ 5</td><td class="num">116</td></tr>
+  </table>
+
+  <h3>Step 2: gradient for the whole dataset</h3>
+  <p>Exactly the same idea as before: each record gives its own gradient (2 × error × x, from the optional box in section 10), and we take the <b>average</b>.</p>
+  <table>
+    <tr><th>Student</th><th class="num e">Error</th><th class="num">x</th><th class="num g">Record's gradient = 2 × error × x</th></tr>
+    <tr><td>Asha</td><td class="num e">−4</td><td class="num">2</td><td class="num g">−16</td></tr>
+    <tr><td>Bala</td><td class="num e">−8</td><td class="num">4</td><td class="num g">−64</td></tr>
+    <tr><td>Chitra</td><td class="num e">−10</td><td class="num">5</td><td class="num g">−100</td></tr>
+    <tr><td>Dev</td><td class="num e">−12</td><td class="num">6</td><td class="num g">−144</td></tr>
+    <tr><td>Esha</td><td class="num e">−16</td><td class="num">8</td><td class="num g">−256</td></tr>
+    <tr class="tot"><td colspan="3">Average gradient = (−16 − 64 − 100 − 144 − 256) ÷ 5</td><td class="num">−116</td></tr>
+  </table>
+  <div class="box analogy"><span class="lbl">Every record votes</span>Each record's gradient is its <b>vote</b> on which way the weight should move. All five say "increase w" (negative). Records with a bigger error and a bigger x vote louder (Esha: −256). The average is the final decision.</div>
+
+  <h3>Step 3: update (same rule as before)</h3>
+  <div class="calc">New weight = 8 − (0.01 × −116)
+           = 8 + 1.16
+           = 9.16</div>
+  <h3>Step 4: did it help?</h3>
+  <table>
+    <tr><th>Student</th><th class="num p">ŷ = 9.16x + 10</th><th class="num y">y</th><th class="num e">Error</th><th class="num">Squared error</th></tr>
+    <tr><td>Asha</td><td class="num p">28.32</td><td class="num y">30</td><td class="num e">−1.68</td><td class="num">2.82</td></tr>
+    <tr><td>Bala</td><td class="num p">46.64</td><td class="num y">50</td><td class="num e">−3.36</td><td class="num">11.29</td></tr>
+    <tr><td>Chitra</td><td class="num p">55.80</td><td class="num y">60</td><td class="num e">−4.20</td><td class="num">17.64</td></tr>
+    <tr><td>Dev</td><td class="num p">64.96</td><td class="num y">70</td><td class="num e">−5.04</td><td class="num">25.40</td></tr>
+    <tr><td>Esha</td><td class="num p">83.28</td><td class="num y">90</td><td class="num e">−6.72</td><td class="num">45.16</td></tr>
+    <tr class="tot"><td colspan="4">MSE</td><td class="num">≈ 20.46 (down from 116 ✓)</td></tr>
+  </table>
+
+  <h3>Try it: the dataset calculator</h3>
+  <span class="hint">👆 Move the weight and watch every column update. Or press <b>One update step</b> to let gradient descent do it, one step at a time.</span>
+  <div class="stepper" style="flex-wrap:wrap">
+    <div style="flex:1 1 300px"><label class="sl">Weight w = <b id="dcWV"></b> (bias b = 10)</label><input type="range" id="dcW" min="6" max="14" step="0.01" value="8"></div>
+    <label>Learning rate:&nbsp;<select id="dcLr"><option value="0.005">0.005</option><option value="0.01" selected>0.01</option><option value="0.02">0.02</option></select></label>
+    <button class="btn primary" id="dcStep">One update step ▶</button><button class="btn" id="dcReset">Reset to w = 8</button>
+  </div>
+  <div id="dcTable"></div>
+  <div class="status" id="dcStatus"></div>
+  <div class="box myth"><span class="lbl">You may also see 1/2N</span>Some books write the loss as <b>(1/2N) × Σ(ŷ − y)²</b>. The extra ½ only cancels the 2 from the gradient, giving the tidier gradient (1/N) × Σ error × x. The best weight is exactly the same.</div>
+  <div class="takeaway"><b>Takeaway:</b> With many records: calculate each record's error and gradient, then <b>average</b>. The update rule doesn't change.</div>
+</section>
+
+<!-- 16 -->
+<section id="s16">
+  <h2>16. What About Many Features?</h2>
+  <p>Real datasets have several features. Let's add a second one: <b>hours of sleep</b> before the exam.</p>
+  <div class="eq">ŷ = w₁ × hours studied + w₂ × hours slept + b</div>
+  <div class="dtitle">Students with two features (w₁ = 8, w₂ = 1, b = 10)</div>
+  <table>
+    <tr><th>Student</th><th class="num">x₁: Hours studied</th><th class="num">x₂: Hours slept</th><th class="num y">Actual y</th><th class="num p">ŷ = 8x₁ + 1x₂ + 10</th><th class="num e">Error</th><th class="num">Squared error</th></tr>
+    <tr><td>Chitra</td><td class="num">5</td><td class="num">7</td><td class="num y">60</td><td class="num p">57</td><td class="num e">−3</td><td class="num">9</td></tr>
+    <tr><td>Kiran</td><td class="num">3</td><td class="num">6</td><td class="num y">45</td><td class="num p">40</td><td class="num e">−5</td><td class="num">25</td></tr>
+    <tr><td>Leela</td><td class="num">8</td><td class="num">5</td><td class="num y">85</td><td class="num p">79</td><td class="num e">−6</td><td class="num">36</td></tr>
+    <tr class="tot"><td colspan="6">MSE = (9 + 25 + 36) ÷ 3</td><td class="num">23.33</td></tr>
+  </table>
+  <div class="question">We now have two weights. Do they share one gradient, or does each weight get its own?</div>
+  <p><b>Each weight gets its own gradient</b>, calculated the same way but using <b>its own feature</b>:</p>
+  <table>
+    <tr><th>Student</th><th class="num e">Error</th><th class="num g">Gradient for w₁ = 2 × error × x₁</th><th class="num g">Gradient for w₂ = 2 × error × x₂</th></tr>
+    <tr><td>Chitra</td><td class="num e">−3</td><td class="num g">2 × −3 × 5 = −30</td><td class="num g">2 × −3 × 7 = −42</td></tr>
+    <tr><td>Kiran</td><td class="num e">−5</td><td class="num g">2 × −5 × 3 = −30</td><td class="num g">2 × −5 × 6 = −60</td></tr>
+    <tr><td>Leela</td><td class="num e">−6</td><td class="num g">2 × −6 × 8 = −96</td><td class="num g">2 × −6 × 5 = −60</td></tr>
+    <tr class="tot"><td colspan="2">Average</td><td class="num">−52</td><td class="num">−54</td></tr>
+  </table>
+  <div class="calc">w₁ = 8 − 0.01 × (−52) = 8.52
+w₂ = 1 − 0.01 × (−54) = 1.54
+
+New MSE ≈ 4.07   (down from 23.33 ✓)</div>
+  <div class="box key"><span class="lbl">The pattern</span>Every weight is updated <b>at the same time</b>, each with its own gradient. With 100 features there are 100 weights and 100 gradients per step. The list of all of them together is what people call "the gradient".</div>
+</section>
+
+<!-- 17 -->
+<section id="s17">
+  <h2>17. How Many Records Do We Use Before Updating?</h2>
+  <div class="question">If we have 10,000 records, do we have to process all 10,000 before updating the weight even once?</div>
+  <p>No. We can choose. First, three words:</p>
+  <table>
+    <tr><th style="width:16%">Word</th><th>Meaning</th><th>Example: 10 records, batch size 4</th></tr>
+    <tr><td><b>Batch</b></td><td>The group of records used for <b>one</b> update</td><td>4 records</td></tr>
+    <tr><td><b>Iteration</b></td><td><b>One</b> gradient calculation + <b>one</b> weight update</td><td>10 ÷ 4 → <b>3 iterations</b> (4 + 4 + 2)</td></tr>
+    <tr><td><b>Epoch</b></td><td>One complete pass through <b>all</b> the training records</td><td>After 3 iterations, every record has been used once</td></tr>
+  </table>
+
+  <h3>See it: how the records are grouped</h3>
+  <span class="hint">👆 Pick a method. Colours show which records go into the same update; the red marks show when the weight changes.</span>
+  <div class="stepper"><button class="btn on" data-bm="10">Batch GD (all 10)</button><button class="btn" data-bm="1">Stochastic (1 at a time)</button><button class="btn" data-bm="4">Mini-batch (4)</button></div>
+  <div id="btTable"></div>
+  <div class="readout" id="btOut"></div>
+
+  <h3>The three methods</h3>
+  <table>
+    <tr><th>Method</th><th>Records per update</th><th>When does the weight change?</th></tr>
+    <tr><td><b>Batch gradient descent</b></td><td><b>All</b> records</td><td><b>Once per epoch</b>: average every record's gradient, then update</td></tr>
+    <tr><td><b>Stochastic gradient descent (SGD)</b></td><td><b>1</b> random record</td><td>After <b>every single record</b></td></tr>
+    <tr><td><b>Mini-batch gradient descent</b></td><td>A small random group (e.g. 32)</td><td>After <b>every mini-batch</b></td></tr>
+  </table>
+  <p>"Stochastic" just means <b>random</b>. Records are usually shuffled at the start of every epoch.</p>
+
+  <h3>Worked example: one epoch on our 5 students (η = 0.01, start w = 8)</h3>
+  <div class="row">
+    <div class="col"><h4>Batch: 1 update</h4><table>
+      <tr><th>Records used</th><th class="num g">Avg gradient</th><th class="num">New w</th></tr>
+      <tr><td>All 5</td><td class="num g">−116</td><td class="num"><b>9.16</b></td></tr></table></div>
+    <div class="col"><h4>Mini-batch (size 2): 3 updates</h4><table>
+      <tr><th>Batch</th><th class="num">w before</th><th class="num g">Avg gradient</th><th class="num">New w</th></tr>
+      <tr><td>Asha, Bala</td><td class="num">8</td><td class="num g">−40</td><td class="num">8.40</td></tr>
+      <tr><td>Chitra, Dev</td><td class="num">8.40</td><td class="num g">−97.6</td><td class="num">9.38</td></tr>
+      <tr><td>Esha</td><td class="num">9.38</td><td class="num g">−79.87</td><td class="num"><b>10.17</b></td></tr></table></div>
+  </div>
+  <h4>Stochastic: 5 updates, one per student</h4>
+  <table>
+    <tr><th>Student</th><th class="num">w before</th><th class="num p">Prediction</th><th class="num e">Error</th><th class="num g">Gradient</th><th class="num">New w</th></tr>
+    <tr><td>Asha (x = 2)</td><td class="num">8.00</td><td class="num p">26.00</td><td class="num e">−4.00</td><td class="num g">−16.00</td><td class="num">8.16</td></tr>
+    <tr><td>Bala (x = 4)</td><td class="num">8.16</td><td class="num p">42.64</td><td class="num e">−7.36</td><td class="num g">−58.88</td><td class="num">8.75</td></tr>
+    <tr><td>Chitra (x = 5)</td><td class="num">8.75</td><td class="num p">53.74</td><td class="num e">−6.26</td><td class="num g">−62.56</td><td class="num">9.37</td></tr>
+    <tr><td>Dev (x = 6)</td><td class="num">9.37</td><td class="num p">66.25</td><td class="num e">−3.75</td><td class="num g">−45.04</td><td class="num">9.82</td></tr>
+    <tr><td>Esha (x = 8)</td><td class="num">9.82</td><td class="num p">88.60</td><td class="num e">−1.40</td><td class="num g">−22.42</td><td class="num"><b>10.05</b></td></tr>
+  </table>
+  <p class="dcap">Each update uses the <b>latest</b> weight. Values rounded to 2 decimals.</p>
+  <div class="box key"><span class="lbl">What happened in one epoch?</span>Batch took <b>1 careful step</b> (w = 9.16). Mini-batch took 3 steps and SGD took 5, so both reached about 10 already, but each of their steps was based on less data, so their path is noisier. On a large, messy dataset that noise matters.</div>
+
+  <h3>Try it: epoch &amp; update calculator</h3>
+  <div class="stepper">
+    <label>Training records:&nbsp;<select id="epN"><option value="100">100</option><option value="10000" selected>10,000</option><option value="1000000">1,000,000</option></select></label>
+    <label>Method:&nbsp;<select id="epB"><option value="0">Batch GD (all)</option><option value="1">SGD (1 record)</option><option value="32">Mini-batch (32)</option><option value="100" selected>Mini-batch (100)</option></select></label>
+  </div>
+  <label class="sl">Epochs = <b id="epEV"></b></label><input type="range" id="epE" min="1" max="20" value="5">
+  <div class="readout" id="epOut"></div>
+
+  <h3>See it: training paths on 24 students</h3>
+  <span class="hint">👆 Same data, same learning rate, 5 epochs each. Toggle the methods; press <b>Shuffle again</b> to re-run with a new random order.</span>
+  <svg class="chart" id="bchart" viewBox="0 0 640 320"></svg>
+  <div class="stepper">
+    <label><input type="checkbox" class="bm" value="batch" checked> <b style="color:#4f46e5">Batch</b></label>
+    <label><input type="checkbox" class="bm" value="mini" checked> <b style="color:#059669">Mini-batch (size 6)</b></label>
+    <label><input type="checkbox" class="bm" value="sgd" checked> <b style="color:#dc2626">SGD</b></label>
+    <button class="btn" id="bShuffle">🔀 Shuffle again</button>
+  </div>
+  <div class="readout" id="bOut"></div>
+
+  <h3>Which one is better?</h3>
+  <table>
+    <tr><th style="width:15%">Method</th><th>Advantages</th><th>Disadvantages</th><th style="width:19%">Best when</th></tr>
+    <tr><td><b>Batch</b></td><td>Uses all records, so each step points in the <b>most accurate</b> direction · smooth path · same result every run</td><td><b>Slow</b>: every record before one update · needs all data in memory · many epochs needed</td><td>Small datasets</td></tr>
+    <tr><td><b>SGD</b></td><td><b>Fast, frequent</b> updates · very little memory · works with data arriving live</td><td><b>Noisy, zig-zag</b> path: one odd record can push w the wrong way · loss never fully settles</td><td>Streaming data, limited memory</td></tr>
+    <tr class="hl"><td><b>Mini-batch</b> ⭐</td><td><b>Best of both</b>: fairly smooth and fast · fits GPUs well</td><td>One more setting to choose (batch size: 32, 64, 128…) · still a little noisy</td><td><b>Almost always</b>: the default</td></tr>
+  </table>
+  <div class="box analogy"><span class="lbl">Analogy: deciding which way to walk</span><b>Batch:</b> ask the whole class before every step (accurate but slow). <b>SGD:</b> ask one random student each time (fast but sometimes misleading). <b>Mini-batch:</b> ask a small group (quick and fairly reliable).</div>
+</section>
+
+<div class="part">Part 5 <span>Keeping the model healthy, and other problem types</span></div>
+
+<!-- 18 -->
+<section id="s18">
+  <h2>18. What If Some Features Become Too Powerful? Regularisation</h2>
+  <p>Look at this dataset. Some columns are useful; some are just noise that has nothing to do with marks:</p>
+  <div class="dtitle">Students with useful and useless features</div>
+  <table>
+    <tr><th>Student</th><th class="num">Hours studied</th><th class="num">Attendance %</th><th class="num">Practice tests</th><th class="num">Hours slept</th><th class="num">Roll number</th><th class="num">Bench row</th><th class="num y">Marks</th></tr>
+    <tr><td>Asha</td><td class="num">2</td><td class="num">70</td><td class="num">1</td><td class="num">6</td><td class="num">14</td><td class="num">3</td><td class="num y">30</td></tr>
+    <tr><td>Bala</td><td class="num">4</td><td class="num">82</td><td class="num">2</td><td class="num">7</td><td class="num">3</td><td class="num">1</td><td class="num y">50</td></tr>
+    <tr><td>Chitra</td><td class="num">5</td><td class="num">88</td><td class="num">3</td><td class="num">7</td><td class="num">21</td><td class="num">4</td><td class="num y">60</td></tr>
+    <tr><td>Dev</td><td class="num">6</td><td class="num">90</td><td class="num">3</td><td class="num">5</td><td class="num">9</td><td class="num">2</td><td class="num y">70</td></tr>
+    <tr><td>Esha</td><td class="num">8</td><td class="num">96</td><td class="num">5</td><td class="num">8</td><td class="num">17</td><td class="num">5</td><td class="num y">90</td></tr>
+  </table>
+  <p class="dcap">Roll number and bench row have nothing to do with marks, but with few records the model may still find accidental patterns in them.</p>
+  <div class="question">With 100 features and limited data, the model might give large weights to useless columns like roll number. Can we encourage it to keep weights under control?</div>
+  <p>Yes, with <b>regularisation</b>: we add a <b>penalty for large weights</b> to the loss. Now a weight must "earn its place" by really reducing the error.</p>
+  <div class="eq">Total loss = MSE + λ × (size of the weights)<small>λ ("lambda") = how strong the penalty is: a hyperparameter we choose</small></div>
+  <table>
+    <tr><th></th><th>L1 (Lasso)</th><th>L2 (Ridge)</th></tr>
+    <tr><td><b>Penalty</b></td><td>|w₁| + |w₂| + … (absolute values)</td><td>w₁² + w₂² + … (squares)</td></tr>
+    <tr><td><b>Effect</b></td><td>Pushes useless weights to <b>exactly 0</b>: the feature is dropped</td><td>Shrinks <b>all</b> weights a little; rarely exactly 0</td></tr>
+    <tr><td><b>Analogy</b></td><td>Declutter: throw unused items away</td><td>Pack lighter: a bit less of everything</td></tr>
+  </table>
+  <h3>See it: watch the weights shrink</h3>
+  <span class="hint">👆 These are the weights a model learned on the dataset above. Increase λ and switch between L1 and L2.</span>
+  <div class="stepper"><button class="btn on" id="rgL1">L1 (Lasso)</button><button class="btn" id="rgL2">L2 (Ridge)</button></div>
+  <label class="sl">Penalty strength λ = <b id="rgLV"></b></label><input type="range" id="rgL" min="0" max="3" step="0.05" value="0">
+  <div class="bars" id="rgBars"></div>
+  <div class="readout" id="rgOut" style="margin-top:8px"></div>
+  <div class="box warn"><span class="lbl">Too much of a good thing</span>If λ is too big, even useful weights get crushed and the model <b>underfits</b>. λ is chosen using the validation set.</div>
+</section>
+
+<!-- 19 -->
+<section id="s19">
+  <h2>19. What Changes for Classification?</h2>
+  <div class="question">So far we predicted a number (marks). What if the target is a category, like Spam vs. Not spam?</div>
+  <div class="dtitle">Emails</div>
+  <table>
+    <tr><th>Email</th><th class="num">Number of links</th><th>Contains "free"?</th><th>Sender known?</th><th class="y">Actual</th></tr>
+    <tr><td>#1</td><td class="num">7</td><td>Yes</td><td>No</td><td class="y">Spam</td></tr>
+    <tr><td>#2</td><td class="num">0</td><td>No</td><td>Yes</td><td class="y">Not spam</td></tr>
+    <tr><td>#3</td><td class="num">2</td><td>No</td><td>No</td><td class="y">Spam</td></tr>
+    <tr><td>#4</td><td class="num">5</td><td>Yes</td><td>Yes</td><td class="y">Not spam</td></tr>
+  </table>
+  <p>Three things change. Everything else (gradient, learning rate, update, epochs) stays the same.</p>
+  <h3>Change 1: the output becomes a probability</h3>
+  <p>The model still calculates a raw score <b>z = wx + b</b>. A function called <b>sigmoid</b> squashes it into a probability between 0 and 1. Then a <b>threshold</b> (usually 0.5) turns it into a decision.</p>
+  <div class="vflow">features → z = wx + b → sigmoid → probability p → p ≥ 0.5 ? → Spam / Not spam</div>
+  <div class="row">
+    <div class="col" style="flex:1.4 1 400px"><svg class="chart" id="sigChart" viewBox="0 0 520 260"></svg></div>
+    <div class="col">
+      <label class="sl">Raw score z = wx + b = <b id="zV"></b></label><input type="range" id="zR" min="-6" max="6" step="0.1" value="1.2">
+      <div class="readout" id="zOut" style="margin-top:8px"></div>
+    </div>
+  </div>
+  <h3>Change 2: the loss becomes cross-entropy</h3>
+  <p>Instead of squaring the error, we look at the <b>probability the model gave to the correct answer</b>. High → small loss. Confidently wrong → very big loss.</p>
+  <div class="eq">Loss = −log(probability given to the correct answer)</div>
+  <table>
+    <tr><th>Email</th><th class="y">Actual</th><th class="num p">Model's P(spam)</th><th class="num">P(correct answer)</th><th class="num">Loss</th><th>Verdict</th></tr>
+    <tr><td>#1</td><td class="y">Spam</td><td class="num p">0.90</td><td class="num">0.90</td><td class="num">0.11</td><td>Confident and right: tiny loss</td></tr>
+    <tr><td>#2</td><td class="y">Not spam</td><td class="num p">0.20</td><td class="num">0.80</td><td class="num">0.22</td><td>Right: small loss</td></tr>
+    <tr><td>#3</td><td class="y">Spam</td><td class="num p">0.30</td><td class="num">0.30</td><td class="num">1.20</td><td>Wrong: bigger loss</td></tr>
+    <tr><td>#4</td><td class="y">Not spam</td><td class="num p">0.95</td><td class="num">0.05</td><td class="num">3.00</td><td>Confidently wrong: very big loss</td></tr>
+  </table>
+  <p class="dcap">Natural log, rounded. The average of this column is the dataset's loss, exactly like MSE was an average.</p>
+  <h3>Change 3: how we judge success</h3>
+  <p>Instead of "how many marks off", we ask "how often is it right, and does it catch the important cases?" (accuracy, precision, recall: a later session).</p>
+  <table>
+    <tr><th>Problem</th><th>Output</th><th>Loss</th></tr>
+    <tr><td><b>Regression</b> (marks, salary)</td><td>A number</td><td>MSE</td></tr>
+    <tr><td><b>Binary classification</b> (spam / not)</td><td>One probability (sigmoid)</td><td>Binary cross-entropy</td></tr>
+    <tr><td><b>Multiclass</b> (cat / dog / bird)</td><td>A probability per class, adding to 100% (softmax)</td><td>Categorical cross-entropy</td></tr>
+  </table>
+</section>
+
+<!-- 20 -->
+<section id="s20">
+  <h2>20. The Complete Story</h2>
+  <div class="chain" style="text-align:center;font-weight:bold;font-family:monospace;font-size:1.05rem;line-height:1.9">
+    FEATURES (X)<br>↓<br>WEIGHTS + BIAS<br>↓<br>PREDICTION (ŷ)<br>↓<br>COMPARE WITH ACTUAL (y)<br>↓<br>ERROR → LOSS (MSE)<br>↓<br>GRADIENT (∂L/∂w)<br>↓<br>× LEARNING RATE<br>↓<br>UPDATE THE WEIGHTS<br>↓<br>REPEAT (iterations → epochs)
+  </div>
+  <h3>Cheat sheet</h3>
+  <table>
+    <tr><th style="width:26%">Concept</th><th>One line</th><th style="width:26%">Our example</th></tr>
+    <tr><td><b>Model</b></td><td>ŷ = wx + b</td><td>ŷ = 8 × 5 + 10 = 50</td></tr>
+    <tr><td><b>Weight / bias</b></td><td>w = slope (how much a feature matters); b = starting point</td><td>w = 8, b = 10</td></tr>
+    <tr><td><b>Error</b></td><td>ŷ − y</td><td>50 − 60 = −10</td></tr>
+    <tr><td><b>Loss</b></td><td>(ŷ − y)²</td><td>100</td></tr>
+    <tr><td><b>MSE</b></td><td>Average of the squared errors over all records</td><td>116 for 5 students</td></tr>
+    <tr><td><b>Gradient</b></td><td>How much the loss changes when the weight changes a little (∂L/∂w)</td><td>−100</td></tr>
+    <tr><td><b>Reading the gradient</b></td><td>Negative → increase w · positive → decrease w · ≈ 0 → stop</td><td>Negative → increase</td></tr>
+    <tr><td><b>Learning rate</b></td><td>Step size; chosen by us</td><td>0.01</td></tr>
+    <tr><td><b>Update</b></td><td>w_new = w_old − η × gradient</td><td>8 − 0.01 × (−100) = 9</td></tr>
+    <tr><td><b>Batch / iteration / epoch</b></td><td>Records per update / one update / one full pass</td><td>10 records, batch 4 → 3 iterations</td></tr>
+    <tr><td><b>Batch · SGD · mini-batch</b></td><td>All records · 1 record · small group per update</td><td>Mini-batch is the default</td></tr>
+    <tr><td><b>L1 / L2</b></td><td>Penalty for big weights: L1 → zeros; L2 → smaller</td><td>Roll number weight → 0</td></tr>
+    <tr><td><b>Classification</b></td><td>Sigmoid → probability; cross-entropy loss</td><td>P(spam) = 0.9 → loss 0.11</td></tr>
+  </table>
+  <div class="takeaway"><b>The mental model:</b> The model makes a prediction, measures how wrong it is using loss, uses the gradient to know which way to change its weights, uses the learning rate to control the size of the change, and repeats this until the loss is small.</div>
+  <hr style="margin:30px 0;border:none;border-top:1px solid var(--line)">
+  <h3>Quick review quiz</h3>
+  <p>Score: <b id="qScore">0 / 0</b></p>
+  <div id="quizBox"></div>
+</section>
+<footer>AI Engineering Basics · Session 2 · How a model learns</footer>
+</div>
+<script>
+const $=id=>document.getElementById(id);
+const NS="http://www.w3.org/2000/svg";
+function el(t,a,p){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function txt(p,x,y,s,a){const t=el("text",Object.assign({x,y,"font-size":12,fill:"#374151","font-family":"Segoe UI, Arial"},a||{}),p);t.textContent=s;return t;}
+const fmt=n=>n.toLocaleString("en-IN");
+const sgn=v=>(v<0?"−":"")+Math.abs(v);
+const f2=v=>(v<0?"−":"")+Math.abs(v).toFixed(2);
+function axes(svg,o){const X=v=>o.L+(v-o.xmin)/(o.xmax-o.xmin)*(o.W-o.L-o.R),Y=v=>o.H-o.B-(v-o.ymin)/(o.ymax-o.ymin)*(o.H-o.T-o.B);
+ (o.yt||[]).forEach(v=>{el("line",{x1:o.L,x2:o.W-o.R,y1:Y(v),y2:Y(v),stroke:"#f1f5f9"},svg);txt(svg,o.L-6,Y(v)+4,String(v),{"text-anchor":"end","font-size":11,fill:"#6b7280"});});
+ (o.xt||[]).forEach(v=>txt(svg,X(v),o.H-o.B+15,String(v),{"text-anchor":"middle","font-size":11,fill:"#6b7280"}));
+ el("line",{x1:o.L,x2:o.W-o.R,y1:o.H-o.B,y2:o.H-o.B,stroke:"#374151","stroke-width":1.5},svg);el("line",{x1:o.L,x2:o.L,y1:o.T,y2:o.H-o.B,stroke:"#374151","stroke-width":1.5},svg);
+ txt(svg,(o.L+o.W-o.R)/2,o.H-5,o.xlab,{"text-anchor":"middle","font-size":12.5});txt(svg,14,(o.T+o.H-o.B)/2,o.ylab,{"text-anchor":"middle","font-size":12.5,transform:`rotate(-90 14 ${(o.T+o.H-o.B)/2})`});return {X,Y};}
+function mkQ(box,list,scoreId){let s=0,t=0;list.forEach((q,qi)=>{const d=document.createElement("div");d.className="quiz-q";d.innerHTML=`<b>${qi+1}. ${q.q}</b><div class="opts"></div><div class="exp">💡 ${q.e}</div>`;const o=d.querySelector(".opts");
+ q.o.forEach((opt,i)=>{const b=document.createElement("button");b.className="btn";b.textContent=opt;b.onclick=()=>{if(d.classList.contains("done"))return;d.classList.add("done");t++;if(i===q.a)s++;b.classList.add(i===q.a?"right":"wrong");o.children[q.a].classList.add("right");$(scoreId).textContent=`${s} / ${t}`;};o.appendChild(b);});box.appendChild(d);});}
+
+/* ---------- 4. WEIGHT vs BIAS ---------- */
+function wbPanel(id,w,b,col,label,many){const svg=$(id);svg.innerHTML="";
+ const A=axes(svg,{L:40,R:12,T:12,B:36,W:420,H:300,xmin:0,xmax:10,ymin:-10,ymax:100,xlab:"Hours (x)",ylab:"Prediction (ŷ)",xt:[0,2,4,6,8,10],yt:[0,25,50,75,100]});
+ const cp=el("clipPath",{id:id+"c"},el("defs",{},svg));el("rect",{x:40,y:12,width:368,height:252},cp);
+ const line=(ww,bb,st)=>el("line",Object.assign({x1:A.X(0),y1:A.Y(bb),x2:A.X(10),y2:A.Y(ww*10+bb),"clip-path":`url(#${id}c)`},st),svg);
+ many.forEach(([ww,bb])=>line(ww,bb,{stroke:col,"stroke-width":1.2,opacity:.22}));
+ line(8,10,{stroke:"#9ca3af","stroke-width":2,"stroke-dasharray":"6 5"});
+ line(w,b,{stroke:col,"stroke-width":3.5});
+ el("circle",{cx:A.X(0),cy:A.Y(b),r:6,fill:col,stroke:"#fff","stroke-width":2},svg);
+ txt(svg,A.X(0)+10,A.Y(b)+18,`starts at ŷ = ${b}`,{fill:col,"font-weight":700,stroke:"#fff","stroke-width":4,"paint-order":"stroke"});
+ txt(svg,100,30,label,{"font-size":14,"font-weight":700,fill:col,stroke:"#fff","stroke-width":4,"paint-order":"stroke"});}
+function wbDraw(){const w=+$("wbWs").value,b=+$("wbBs").value;$("wbWV").textContent=w.toFixed(1);$("wbBV").textContent=b;
+ wbPanel("wbW",w,10,"#4f46e5",`ŷ = ${w.toFixed(1)}x + 10`,[[2,10],[4,10],[6,10],[10,10]]);
+ wbPanel("wbB",8,b,"#9333ea",`ŷ = 8x + ${b}`,[[8,0],[8,20],[8,30],[8,40]]);}
+$("wbWs").oninput=wbDraw;$("wbBs").oninput=wbDraw;wbDraw();
+
+/* ---------- Chitra: x=5, y=60, b=10 ---------- */
+const LF=w=>(5*w-50)**2, GF=w=>10*(5*w-50);
+
+/* ---------- 9. VALLEY ---------- */
+(function(){const svg=$("valley");const A=axes(svg,{L:48,R:15,T:15,B:40,W:560,H:250,xmin:6,xmax:14,ymin:0,ymax:400,xlab:"Weight w",ylab:"Loss",xt:[6,8,9,10,11,12,14],yt:[0,100,200,300,400]});
+ let d="";for(let i=0;i<=100;i++){const w=6+i*8/100;d+=(i?"L":"M")+A.X(w)+" "+A.Y(Math.min(400,LF(w)));}el("path",{d,fill:"none",stroke:"#4f46e5","stroke-width":3},svg);
+ [[6,400],[9,25],[11,25],[12,100],[14,400]].forEach(([w,l])=>el("circle",{cx:A.X(w),cy:A.Y(l),r:4,fill:"#94a3b8"},svg));
+ el("circle",{cx:A.X(8),cy:A.Y(100),r:7,fill:"#d97706"},svg);txt(svg,A.X(8)+12,A.Y(100)-6,"w = 8 → loss 100 (we start here)",{"font-weight":700,fill:"#b45309"});
+ el("circle",{cx:A.X(10),cy:A.Y(0),r:7,fill:"#10b981"},svg);txt(svg,A.X(10),A.Y(0)-14,"best: w = 10, loss 0",{"text-anchor":"middle","font-weight":700,fill:"#065f46"});})();
+
+/* ---------- 10. GRADIENT SLOPE ---------- */
+function ndDraw(){const svg=$("ndChart");svg.innerHTML="";const w=+$("ndW").value,g=GF(w),yh=5*w+10;
+ const df=el("defs",{},svg),m=el("marker",{id:"ndArr",markerWidth:10,markerHeight:10,refX:8,refY:3,orient:"auto"},df);el("path",{d:"M0,0 L0,6 L9,3 z",fill:"#10b981"},m);
+ const A=axes(svg,{L:48,R:15,T:15,B:40,W:560,H:300,xmin:6,xmax:14,ymin:0,ymax:400,xlab:"Weight w",ylab:"Loss",xt:[6,8,10,12,14],yt:[0,100,200,300,400]});
+ let d="";for(let i=0;i<=100;i++){const v=6+i*8/100;d+=(i?"L":"M")+A.X(v)+" "+A.Y(Math.min(400,LF(v)));}el("path",{d,fill:"none",stroke:"#c7d2fe","stroke-width":4},svg);
+ const h=.7;el("line",{x1:A.X(w-h),y1:A.Y(LF(w)-g*h),x2:A.X(w+h),y2:A.Y(LF(w)+g*h),stroke:"#f97316","stroke-width":3},svg);
+ if(Math.abs(g)>1){const dir=g<0?1:-1,ax=A.X(w),ay=A.Y(Math.min(400,LF(w)))+24;el("line",{x1:ax,y1:ay,x2:ax+dir*50,y2:ay,stroke:"#10b981","stroke-width":3,"marker-end":"url(#ndArr)"},svg);txt(svg,ax+dir*58,ay+4,"downhill",{"text-anchor":dir>0?"start":"end",fill:"#065f46","font-weight":700});}
+ el("circle",{cx:A.X(w),cy:A.Y(Math.min(400,LF(w))),r:8,fill:"#dc2626",stroke:"#fff","stroke-width":2},svg);
+ const l0=LF(w),l1=LF(w+.01),ch=l1-l0;
+ $("ndWV").textContent=w.toFixed(1);
+ $("ndOut").innerHTML=`ŷ = ${w.toFixed(1)} × 5 + 10 = <b>${yh.toFixed(1)}</b><br>Loss = (${yh.toFixed(1)} − 60)² = <b>${l0.toFixed(2)}</b><br>Nudge to w = ${(w+.01).toFixed(2)}: loss ${l1.toFixed(4)}<br>Change ≈ ${ch>=0?"+":"−"}${Math.abs(ch).toFixed(4)} per 0.01 → <b>gradient ≈ ${g>=0?"":"−"}${Math.abs(g).toFixed(0)}</b>`;
+ const st=$("ndStatus");if(Math.abs(g)<1){st.className="status st-ok";st.innerHTML="✅ Gradient ≈ 0: flat ground. This is the best weight (w = 10). Stop.";}
+ else if(g<0){st.className="status st-mid";st.innerHTML="Gradient is <b>negative</b> → increasing w lowers the loss → <b>increase w</b>."+(g<-60?" Steep: far from the bottom.":" Gentle: getting close.");}
+ else{st.className="status st-mid";st.innerHTML="Gradient is <b>positive</b> → increasing w raises the loss → <b>decrease w</b>."+(g>60?" Steep: far from the bottom.":" Gentle: getting close.");}}
+$("ndW").oninput=ndDraw;ndDraw();
+
+/* ---------- 13. LEARNING PLAYGROUND ---------- */
+let pw,ps,trail,runT=null;
+function pgReset(){clearInterval(runT);runT=null;pw=8;ps=0;trail=[pw];pgDraw();}
+function pgStep(){pw=pw-(+$("pgLr").value)*GF(pw);ps++;trail.push(pw);pgDraw();}
+function pgDraw(){const svg=$("pg");svg.innerHTML="";const A=axes(svg,{L:48,R:15,T:15,B:40,W:580,H:330,xmin:5,xmax:15,ymin:0,ymax:600,xlab:"Weight w",ylab:"Loss",xt:[5,6,7,8,9,10,11,12,13,14,15],yt:[0,150,300,450,600]});
+ let d="";for(let i=0;i<=100;i++){const w=5+i/10;d+=(i?"L":"M")+A.X(w)+" "+A.Y(Math.min(600,LF(w)));}el("path",{d,fill:"none",stroke:"#c7d2fe","stroke-width":4},svg);
+ const cl=w=>Math.max(5,Math.min(15,w)),pts=trail.map(w=>[A.X(cl(w)),A.Y(Math.min(600,LF(w)))]);
+ if(pts.length>1)el("polyline",{points:pts.map(p=>p.join(",")).join(" "),fill:"none",stroke:"#f59e0b","stroke-width":1.5,"stroke-dasharray":"4 3"},svg);
+ pts.forEach((p,i)=>el("circle",{cx:p[0],cy:p[1],r:i===pts.length-1?9:4,fill:i===pts.length-1?"#dc2626":"#f59e0b",stroke:"#fff","stroke-width":1.5},svg));
+ el("circle",{cx:A.X(10),cy:A.Y(0),r:5,fill:"#10b981"},svg);txt(svg,A.X(10),A.Y(0)-10,"bottom (w = 10)",{"text-anchor":"middle",fill:"#065f46","font-weight":700});
+ const lr=+$("pgLr").value;$("pgLrV").textContent=lr;const big=Math.abs(pw-10)>200;
+ $("pgOut").innerHTML=`Steps: <b>${ps}</b><br>w = <b>${big?"exploded":pw.toFixed(4)}</b> · prediction = <b>${big?"?":(5*pw+10).toFixed(2)}</b><br>loss = <b>${big?"∞":LF(pw).toFixed(3)}</b> · gradient = <b>${big?"huge":GF(pw).toFixed(2)}</b>`;
+ const f=1-50*lr,st=$("pgStatus");let c,m;
+ if(Math.abs(f)>=1){c="st-bad";m="🔴 Too big: each jump lands higher on the other side. The loss explodes.";}
+ else if(f<-0.05){c="st-mid";m="🟡 Big: it overshoots and zig-zags across the valley, but still settles.";}
+ else if(f>0.85){c="st-mid";m="🐢 Tiny: right direction, but very slow.";}else{c="st-ok";m="✅ Good: quick steps to the bottom.";}
+ if(Math.abs(pw-10)<.001&&ps>0){c="st-ok";m=`✅ Reached the bottom in ${ps} steps.`;}st.className="status "+c;st.innerHTML=m;}
+$("pgStep").onclick=pgStep;$("pgRun").onclick=()=>{clearInterval(runT);runT=setInterval(()=>{pgStep();if(Math.abs(pw-10)<.001||ps>=150||Math.abs(pw-10)>200){clearInterval(runT);pgDraw();}},140);};
+$("pgReset").onclick=pgReset;$("pgLr").oninput=pgReset;document.querySelectorAll("[data-lr]").forEach(b=>b.onclick=()=>{$("pgLr").value=b.dataset.lr;pgReset();});pgReset();
+
+/* ---------- 15. DATASET CALCULATOR ---------- */
+const DS=[["Asha",2,30],["Bala",4,50],["Chitra",5,60],["Dev",6,70],["Esha",8,90]];
+let dcw=8,dcSteps=0;
+function dcDraw(){$("dcW").value=dcw;$("dcWV").textContent=dcw.toFixed(2);
+ let sq=0,gs=0,rows="";DS.forEach(([n,x,y])=>{const p=dcw*x+10,e=p-y,g=2*e*x;sq+=e*e;gs+=g;
+  rows+=`<tr><td>${n}</td><td class="num">${x}</td><td class="num y">${y}</td><td class="num p">${p.toFixed(2)}</td><td class="num e">${f2(e)}</td><td class="num">${(e*e).toFixed(2)}</td><td class="num g">${f2(g)}</td></tr>`;});
+ const mse=sq/DS.length,ag=gs/DS.length;
+ $("dcTable").innerHTML=`<table><tr><th>Student</th><th class="num">x</th><th class="num y">y</th><th class="num p">ŷ = ${dcw.toFixed(2)}x + 10</th><th class="num e">Error</th><th class="num">Squared error</th><th class="num g">2 × error × x</th></tr>${rows}
+ <tr class="tot"><td colspan="5">Average (÷ 5)</td><td class="num">MSE = ${mse.toFixed(2)}</td><td class="num">Gradient = ${f2(ag)}</td></tr></table>`;
+ const st=$("dcStatus");
+ if(Math.abs(ag)<0.5){st.className="status st-ok";st.innerHTML=`✅ Gradient ≈ 0 and MSE ≈ 0: w = 10 fits every student. ${dcSteps?`Reached in ${dcSteps} update steps.`:""}`;}
+ else if(ag<0){st.className="status st-mid";st.innerHTML=`Gradient is <b>negative</b> (${f2(ag)}) → increase w. Next step: ${dcw.toFixed(2)} − ${$("dcLr").value} × (${f2(ag)}) = <b>${(dcw-(+$("dcLr").value)*ag).toFixed(2)}</b>`;}
+ else{st.className="status st-mid";st.innerHTML=`Gradient is <b>positive</b> (${f2(ag)}) → decrease w. Next step: ${dcw.toFixed(2)} − ${$("dcLr").value} × ${f2(ag)} = <b>${(dcw-(+$("dcLr").value)*ag).toFixed(2)}</b>`;}}
+$("dcW").oninput=()=>{dcw=+$("dcW").value;dcSteps=0;dcDraw();};
+$("dcStep").onclick=()=>{const ag=DS.reduce((s,[,x,y])=>s+2*(dcw*x+10-y)*x,0)/DS.length;dcw=dcw-(+$("dcLr").value)*ag;dcSteps++;dcDraw();};
+$("dcReset").onclick=()=>{dcw=8;dcSteps=0;dcDraw();};$("dcLr").onchange=dcDraw;dcDraw();
+
+/* ---------- 17. BATCH GROUPING TABLE ---------- */
+const BT=[["Asha",2,30],["Bala",4,50],["Chitra",5,60],["Dev",6,70],["Esha",8,90],["Farah",3,40],["Gopi",7,80],["Hari",1,20],["Indu",9,100],["Jai",5,58]];
+function btDraw(B){let rows="",u=0;BT.forEach(([n,x,y],i)=>{const bi=Math.floor(i/B),last=(i%B===B-1)||i===BT.length-1;if(last)u++;
+  rows+=`<tr><td class="num">${i+1}</td><td class="b${bi%5}">${n}</td><td class="num b${bi%5}">${x}</td><td class="num b${bi%5}">${y}</td><td class="b${bi%5}">${B===1?"Record "+(i+1):B>=10?"All records":"Batch "+(bi+1)}</td><td class="upd">${last?"↻ update #"+u:""}</td></tr>`;});
+ $("btTable").innerHTML=`<table class="bt"><tr><th class="num">#</th><th>Student</th><th class="num">Hours</th><th class="num">Marks</th><th>Used in</th><th>Weight changes?</th></tr>${rows}</table>`;
+ const it=Math.ceil(BT.length/B);
+ $("btOut").innerHTML=B>=10?`<b>Batch GD:</b> all 10 records are used to calculate one average gradient → <b>1 update per epoch</b>.`:B===1?`<b>Stochastic GD:</b> the weight is updated after every record → <b>10 updates per epoch</b>.`:`<b>Mini-batch (size ${B}):</b> 10 ÷ ${B} → <b>${it} updates per epoch</b> (batches of 4, 4 and 2).`;}
+document.querySelectorAll("[data-bm]").forEach(b=>b.onclick=()=>{document.querySelectorAll("[data-bm]").forEach(z=>z.classList.toggle("on",z===b));btDraw(+b.dataset.bm);});btDraw(10);
+
+/* ---------- 17. EPOCH CALCULATOR ---------- */
+function epDraw(){const N=+$("epN").value,b0=+$("epB").value,B=b0===0?N:b0,E=+$("epE").value,it=Math.ceil(N/B);$("epEV").textContent=E;
+ const kind=B===1?"SGD: the weight changes after every single record.":B>=N?"Batch gradient descent: the weight changes only once per epoch.":"Mini-batch: the weight changes after every batch.";
+ $("epOut").innerHTML=`Updates per epoch = ${fmt(N)} ÷ ${fmt(B)} = <b>${fmt(it)}</b>${N%B?" (rounded up: the last batch is smaller)":""}<br>Total weight updates = ${fmt(it)} × ${E} epoch${E>1?"s":""} = <b>${fmt(it*E)}</b><br><span style="color:#4f46e5;font-weight:600">${kind}</span>`;}
+["epN","epB","epE"].forEach(i=>$(i).oninput=epDraw);epDraw();
+
+/* ---------- 17. PATHS CHART (24 students, marks ≈ 10 × hours + 10) ---------- */
+let seed=7;const rnd=()=>{seed=(seed*16807)%2147483647;return (seed-1)/2147483646;};const gauss=()=>{let u=0;while(!u)u=rnd();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*rnd());};
+const BD=[];for(let i=0;i<24;i++){const x=1+Math.round(rnd()*80)/10;BD.push([x,10*x+10+gauss()*5]);}
+const BW=BD.reduce((a,[x,y])=>a+x*(y-10),0)/BD.reduce((a,[x])=>a+x*x,0),mseW=w=>BD.reduce((a,[x,y])=>a+(w*x+10-y)**2,0)/BD.length;
+function shuffle(a){const b=a.slice();for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];}return b;}
+function train(bs,lr,ep){let w=6;const h=[[0,w]],per=Math.ceil(BD.length/bs);for(let e=0;e<ep;e++){const s=shuffle(BD);for(let k=0;k<per;k++){const B=s.slice(k*bs,(k+1)*bs);w-=lr*B.reduce((a,[x,y])=>a+2*(w*x+10-y)*x,0)/B.length;h.push([e+(k+1)/per,w]);}}return h;}
+let BR={};function bRun(){BR={batch:train(24,.002,5),mini:train(6,.002,5),sgd:train(1,.002,5)};bDraw();}
+function bDraw(){const svg=$("bchart");svg.innerHTML="";const A=axes(svg,{L:48,R:15,T:15,B:40,W:640,H:320,xmin:0,xmax:5,ymin:5,ymax:12,xlab:"Epochs",ylab:"Weight w",xt:[0,1,2,3,4,5],yt:[5,6,7,8,9,10,11,12]});
+ el("line",{x1:A.X(0),x2:A.X(5),y1:A.Y(BW),y2:A.Y(BW),stroke:"#10b981","stroke-dasharray":"6 4","stroke-width":1.5},svg);txt(svg,A.X(.05),A.Y(BW)-6,`best w ≈ ${BW.toFixed(2)}`,{fill:"#065f46","font-weight":700});
+ const C={batch:"#4f46e5",mini:"#059669",sgd:"#dc2626"},on=[...document.querySelectorAll(".bm")].filter(c=>c.checked).map(c=>c.value);
+ ["sgd","mini","batch"].filter(k=>on.includes(k)).forEach(k=>{const h=BR[k];el("polyline",{points:h.map(([t,w])=>A.X(t)+","+A.Y(Math.max(5,Math.min(12,w)))).join(" "),fill:"none",stroke:C[k],"stroke-width":k==="sgd"?1.6:2.6},svg);if(k!=="sgd")h.forEach(([t,w])=>el("circle",{cx:A.X(t),cy:A.Y(Math.max(5,Math.min(12,w))),r:3,fill:C[k]},svg));});
+ const row=(k,n)=>{const h=BR[k],w=h[h.length-1][1];return `<tr><td><b style="color:${C[k]}">${n}</b></td><td class="num">${h.length-1}</td><td class="num">${w.toFixed(2)}</td><td class="num">${mseW(w).toFixed(1)}</td></tr>`;};
+ $("bOut").innerHTML=`<table style="margin:0"><tr><th>Method</th><th class="num">Weight updates in 5 epochs</th><th class="num">Final w</th><th class="num">Final MSE</th></tr>${row("batch","Batch")}${row("mini","Mini-batch")}${row("sgd","SGD")}</table>
+ <p style="margin:6px 0 0;font-size:13.5px">Batch: 5 smooth steps, still short of the best w (needs more epochs). SGD: 120 quick steps; reaches it fastest but keeps jittering. Mini-batch: the balance. The MSE can't reach 0 because real marks have noise.</p>`;}
+document.querySelectorAll(".bm").forEach(c=>c.onchange=bDraw);$("bShuffle").onclick=bRun;bRun();
+
+/* ---------- 18. REGULARISATION ---------- */
+const RW=[["Hours studied",4.0],["Attendance %",2.6],["Practice tests",1.5],["Hours slept",0.9],["Roll number (noise)",.4],["Bench row (noise)",-.3]];let rgMode="L1";
+function rgDraw(){const lam=+$("rgL").value;$("rgLV").textContent=lam.toFixed(2);const nw=RW.map(([n,w])=>[n,w,rgMode==="L1"?Math.sign(w)*Math.max(Math.abs(w)-lam,0):w/(1+lam)]);
+ $("rgBars").innerHTML=nw.map(([n,w,v])=>{const pct=Math.abs(v)/4*50,left=v>=0?50:50-pct;return `<div class="br"><span class="nm">${n}</span><div class="tr"><div style="position:absolute;left:50%;top:0;bottom:0;width:1px;background:#9ca3af"></div><div class="fl" style="left:${left}%;width:${pct}%;background:${v===0?"#e5e7eb":v>0?"#4f46e5":"#f97316"}"></div></div><span class="vl">${v===0?"<b style='color:#dc2626'>0</b>":v.toFixed(2)}</span></div>`;}).join("");
+ const z=nw.filter(x=>x[2]===0).length;
+ $("rgOut").innerHTML=lam===0?"λ = 0: no penalty. The model even gives some weight to roll number and bench row.":
+  rgMode==="L1"?`<b>L1:</b> ${z} weight${z===1?"":"s"} pushed to exactly <b>0</b>. `+(z===2?"✅ Exactly the two noise features are gone; the useful ones remain.":z===1?"One noise feature is gone; increase λ a little more.":z===3?"🟡 Hours slept was removed too: the penalty is getting strong.":z>3?"⚠️ Too strong: useful features are being removed (underfitting).":"Increase λ to remove the noise features."):
+  `<b>L2:</b> every weight shrinks by the same proportion (÷ ${(1+lam).toFixed(2)}). None become exactly zero.`+(lam>1.5?" ⚠️ Strong penalty: even Hours studied is shrinking a lot.":"");}
+$("rgL").oninput=rgDraw;$("rgL1").onclick=()=>{rgMode="L1";$("rgL1").classList.add("on");$("rgL2").classList.remove("on");rgDraw();};$("rgL2").onclick=()=>{rgMode="L2";$("rgL2").classList.add("on");$("rgL1").classList.remove("on");rgDraw();};rgDraw();
+
+/* ---------- 19. SIGMOID ---------- */
+function sigDraw(){const svg=$("sigChart");svg.innerHTML="";const z=+$("zR").value,p=1/(1+Math.exp(-z));
+ const A=axes(svg,{L:44,R:15,T:15,B:40,W:520,H:260,xmin:-6,xmax:6,ymin:0,ymax:1,xlab:"Raw score z = wx + b",ylab:"Probability of spam",xt:[-6,-4,-2,0,2,4,6],yt:[0,.5,1]});
+ el("line",{x1:A.X(-6),x2:A.X(6),y1:A.Y(.5),y2:A.Y(.5),stroke:"#f59e0b","stroke-dasharray":"6 5","stroke-width":1.5},svg);txt(svg,A.X(-5.8),A.Y(.5)-6,"threshold 0.5",{fill:"#b45309","font-weight":700});
+ let d="";for(let i=0;i<=120;i++){const q=-6+i/10;d+=(i?"L":"M")+A.X(q)+" "+A.Y(1/(1+Math.exp(-q)));}el("path",{d,fill:"none",stroke:"#db2777","stroke-width":3},svg);
+ el("circle",{cx:A.X(z),cy:A.Y(p),r:8,fill:"#111827"},svg);$("zV").textContent=z.toFixed(1);
+ $("zOut").innerHTML=`p = 1 / (1 + e<sup>−${z.toFixed(1)}</sup>) ≈ <b>${(p*100).toFixed(1)}%</b> chance of spam<br>Decision: <b>${p>=.5?"SPAM (1)":"NOT SPAM (0)"}</b><br><span style="font-size:13px;color:#6b7280">If the email really is spam, loss = −log(${p.toFixed(2)}) = ${(-Math.log(p)).toFixed(2)}</span>`;}
+$("zR").oninput=sigDraw;sigDraw();
+
+/* ---------- QUIZ ---------- */
+const QZ=[
+ {q:"In the marks dataset, which is the target y?",o:["Hours studied","Actual marks","The weight"],a:1,e:"y is the actual value from the data. Hours studied is the feature x."},
+ {q:"A fresher has 0 years of experience. Which part of ŷ = wx + b gives their starting salary?",o:["w","b","x"],a:1,e:"When x = 0, w × x = 0, so the prediction is just b."},
+ {q:"Changing the bias b makes the line…",o:["Rotate","Shift up or down","Disappear"],a:1,e:"b moves the whole line; w changes its slope."},
+ {q:"w = 8, x = 5, b = 10, y = 60. What is the error?",o:["10","−10","100"],a:1,e:"ŷ = 50, so error = 50 − 60 = −10."},
+ {q:"Why do we square the error?",o:["So positive and negative errors don't cancel, and big errors count more","Because computers prefer squares"],a:0,e:"−10, +5, +5 add to 0, but their squares add to 150."},
+ {q:"The gradient is calculated from…",o:["The loss, with respect to the weight","The learning rate","The actual value only"],a:0,e:"It measures how much the loss changes when the weight changes a little: ∂L/∂w."},
+ {q:"The gradient is −100. Which way should the weight move?",o:["Increase","Decrease","Become −100"],a:0,e:"Negative gradient → increasing w lowers the loss."},
+ {q:"w = 8, gradient = −100, η = 0.01. New weight?",o:["7","9","108"],a:1,e:"8 − 0.01 × (−100) = 8 + 1 = 9."},
+ {q:"The loss jumps higher every step. Most likely cause?",o:["Learning rate too small","Learning rate too big"],a:1,e:"Steps overshoot the bottom further each time."},
+ {q:"Squared errors for 4 records: 4, 16, 36, 64. What is the MSE?",o:["30","120","64"],a:0,e:"(4 + 16 + 36 + 64) ÷ 4 = 30."},
+ {q:"With two features, how many gradients are calculated per update?",o:["One shared gradient","One per weight (two)"],a:1,e:"Each weight gets its own gradient, using its own feature."},
+ {q:"10,000 records, mini-batch size 100, 3 epochs. How many weight updates?",o:["100","300","30,000"],a:1,e:"10,000 ÷ 100 = 100 per epoch × 3 = 300."},
+ {q:"Which method updates the weight only once per epoch?",o:["SGD","Batch gradient descent","Mini-batch"],a:1,e:"Batch uses all records for one update."},
+ {q:"Which regularisation can push a useless weight (like roll number) to exactly 0?",o:["L1","L2"],a:0,e:"L1 drops useless features; L2 only shrinks them."},
+ {q:"For spam / not spam, which loss do we use?",o:["MSE","Cross-entropy"],a:1,e:"Classification compares probabilities, so we use cross-entropy."}];
+mkQ($("quizBox"),QZ,"qScore");
+
+/* ---------- NAV ---------- */
+const secs=[...document.querySelectorAll("section[id]")],links=[...document.querySelectorAll("nav a")],map={};
+links.forEach(a=>map[a.getAttribute("href").slice(1)]=a);
+window.addEventListener("scroll",()=>{let id="";secs.forEach(s=>{if(scrollY>=s.offsetTop-90&&map[s.id])id=s.id;});links.forEach(a=>a.classList.toggle("active",a.getAttribute("href")==="#"+id));});
+</script>
+</body></html>
